@@ -69,24 +69,24 @@
     .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
   </style>
 </head>
-<body class="text-slate-800 antialiased selection:bg-brand-600 selection:text-white flex min-h-screen">
+<body class="text-slate-800 antialiased selection:bg-brand-600 selection:text-white min-h-screen flex flex-col md:flex-row">
 
   <!-- ================= 1. شاشة تسجيل الدخول ================= -->
   <div id="login-view" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-100">
-    <div class="bg-white p-10 md:p-12 rounded-3xl max-w-lg w-full text-center space-y-8 shadow-xl border border-slate-200/80 animate-fade-up">
-      <div class="w-20 h-20 bg-brand-50 text-brand-700 rounded-3xl flex items-center justify-center mx-auto border-2 border-brand-200 shadow-md">
-        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="bg-white p-8 md:p-12 rounded-3xl max-w-lg w-full text-center space-y-6 md:space-y-8 shadow-xl border border-slate-200/80 animate-fade-up">
+      <div class="w-16 h-16 md:w-20 md:h-20 bg-brand-50 text-brand-700 rounded-3xl flex items-center justify-center mx-auto border-2 border-brand-200 shadow-md">
+        <svg class="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
         </svg>
       </div>
 
-      <div class="space-y-3">
-        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">نظام استئذان الطلاب</h1>
-        <p class="text-base text-slate-500 leading-relaxed">منصة المعلم الذكية لمتابعة وإدارة تصاريح الخروج أثناء الحصة المدرسية</p>
+      <div class="space-y-2 md:space-y-3">
+        <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">نظام استئذان الطلاب</h1>
+        <p class="text-sm md:text-base text-slate-500 leading-relaxed">منصة المعلم الذكية لمتابعة وإدارة تصاريح الخروج أثناء الحصة المدرسية</p>
       </div>
 
-      <button onclick="loginWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-brand-700 hover:bg-brand-800 text-white font-bold text-lg py-4 px-6 rounded-2xl transition duration-200 shadow-lg shadow-brand-700/20 hover:shadow-brand-700/30 active:scale-95 cursor-pointer">
-        <svg class="w-6 h-6" viewBox="0 0 24 24">
+      <button onclick="loginWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-brand-700 hover:bg-brand-800 text-white font-bold text-base md:text-lg py-3.5 md:py-4 px-6 rounded-2xl transition duration-200 shadow-lg shadow-brand-700/20 hover:shadow-brand-700/30 active:scale-95 cursor-pointer">
+        <svg class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24">
           <path fill="#fff" d="M12.24 10.285V13.4h6.887C18.2 16.27 15.64 18.4 12.24 18.4c-3.535 0-6.4-2.865-6.4-6.4s2.865-6.4 6.4-6.4c1.64 0 3.125.62 4.27 1.635l2.42-2.42C17.38 3.325 14.99 2.4 12.24 2.4 6.915 2.4 2.6 6.715 2.6 12.04s4.315 9.64 9.64 9.64c5.56 0 9.24-3.91 9.24-9.405 0-.64-.065-1.26-.185-1.995H12.24z"/>
         </svg>
         <span>تسجيل الدخول عبر Google</span>
@@ -98,13 +98,13 @@
 
   <!-- ================= 2. تنبيه الحساب غير المصرح له ================= -->
   <div id="unauthorized-view" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-100">
-    <div class="bg-white p-10 rounded-3xl max-w-md w-full text-center space-y-5 border border-rose-200 shadow-xl animate-fade-up">
-      <div class="w-16 h-16 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mx-auto text-3xl font-bold border border-rose-200">
+    <div class="bg-white p-8 md:p-10 rounded-3xl max-w-md w-full text-center space-y-5 border border-rose-200 shadow-xl animate-fade-up">
+      <div class="w-14 h-14 md:w-16 md:h-16 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mx-auto text-2xl md:text-3xl font-bold border border-rose-200">
         ✕
       </div>
-      <h2 class="text-2xl font-bold text-slate-900">الحساب غير مصرح له</h2>
-      <p id="unauthorized-email" class="text-sm font-mono text-slate-700 bg-slate-100 py-2.5 px-3 rounded-xl border border-slate-200"></p>
-      <p class="text-sm text-slate-500 leading-relaxed">
+      <h2 class="text-xl md:text-2xl font-bold text-slate-900">الحساب غير مصرح له</h2>
+      <p id="unauthorized-email" class="text-xs md:text-sm font-mono text-slate-700 bg-slate-100 py-2.5 px-3 rounded-xl border border-slate-200"></p>
+      <p class="text-xs md:text-sm text-slate-500 leading-relaxed">
         هذا البريد غير مسجل كمعلم معتمد في النظام. يرجى مراجعة المسؤول لإضافتك.
       </p>
       <button onclick="logout()" class="w-full py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-sm font-bold text-slate-700 transition active:scale-95">
@@ -113,25 +113,51 @@
     </div>
   </div>
 
-  <!-- ================= 3. الواجهة الرئيسية مع القائمة الجانبية ================= -->
-  <div id="app-view" class="hidden flex-1 flex w-full">
+  <!-- ================= 3. الواجهة الرئيسية والتوافق مع الجوال ================= -->
+  <div id="app-view" class="hidden flex-1 flex flex-col md:flex-row w-full min-h-screen">
 
-    <!-- القائمة الجانبية الثابتة على اليمين (Sidebar) -->
-    <aside class="w-72 bg-white border-l border-slate-200 flex flex-col justify-between p-6 shrink-0 shadow-sm">
-      <div class="space-y-8">
-        <!-- هوية الموقع -->
-        <div class="flex items-center gap-3.5 pb-6 border-b border-slate-100">
-          <div class="w-12 h-12 rounded-2xl bg-brand-700 text-white flex items-center justify-center font-extrabold text-xl shadow-md shadow-brand-700/25">
-            P
+    <!-- شريط الرأس العلوي المخصص للجوال فقط -->
+    <header class="md:hidden flex items-center justify-between bg-white border-b border-slate-200 p-4 sticky top-0 z-30 shadow-sm">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-brand-700 text-white flex items-center justify-center font-extrabold text-base shadow-sm">
+          P
+        </div>
+        <div>
+          <h2 class="font-extrabold text-slate-900 text-base leading-tight">منصة الاستئذان</h2>
+          <span class="text-[11px] font-semibold text-brand-600">لوحة الفصل الذكية</span>
+        </div>
+      </div>
+
+      <button onclick="toggleMobileSidebar()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition active:scale-95">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+    </header>
+
+    <!-- الخلفية المعتمة لإغلاق القائمة في الجوال -->
+    <div id="mobile-overlay" onclick="toggleMobileSidebar()" class="hidden md:hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 transition-opacity"></div>
+
+    <!-- القائمة الجانبية (ثابتة على الشاشات الكبيرة + Slide-over Drawer للجوال) -->
+    <aside id="sidebar-menu" class="fixed md:static inset-y-0 right-0 z-50 w-72 bg-white border-l border-slate-200 flex flex-col justify-between p-6 shrink-0 shadow-xl md:shadow-sm transform translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+      <div class="space-y-6">
+        <!-- هوية الموقع وزر إغلاق الجوال -->
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-brand-700 text-white flex items-center justify-center font-extrabold text-lg shadow-md shadow-brand-700/25">
+              P
+            </div>
+            <div>
+              <h2 class="font-extrabold text-slate-900 text-base leading-tight">منصة الاستئذان</h2>
+              <span class="text-xs font-semibold text-brand-600">لوحة الفصل الذكية</span>
+            </div>
           </div>
-          <div>
-            <h2 class="font-extrabold text-slate-900 text-lg leading-tight">منصة الاستئذان</h2>
-            <span class="text-xs font-semibold text-brand-600">لوحة الفصل الذكية</span>
-          </div>
+          <!-- زر إغلاق القائمة في الجوال -->
+          <button onclick="toggleMobileSidebar()" class="md:hidden p-1.5 rounded-lg bg-slate-100 text-slate-500 font-bold">
+            ✕
+          </button>
         </div>
 
-        <!-- روابط التنقل بين الأقسام -->
-        <nav class="space-y-1.5">
+        <!-- روابط التنقل -->
+        <nav class="space-y-2">
           <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-brand-700 bg-brand-50 border border-brand-200/80 transition duration-150 active:scale-98">
             <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
             لوحة الاستئذان المباشر
@@ -147,7 +173,6 @@
             إدارة الطلاب والقوائم
           </button>
 
-          <!-- زر إدارة المعلمين الجديد كتاب كامل -->
           <button onclick="switchTab('teachers')" id="nav-teachers" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition duration-150 active:scale-98">
             <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             صلاحيات المعلمين
@@ -171,18 +196,18 @@
     </aside>
 
     <!-- منطقة المحتوى الرئيسي -->
-    <main class="flex-1 p-6 md:p-10 space-y-8 overflow-y-auto max-h-screen custom-scroll">
+    <main class="flex-1 p-4 md:p-10 space-y-6 md:space-y-8 overflow-y-auto max-h-screen custom-scroll">
 
       <!-- ================= تبويب 1: لوحة الاستئذان المباشر ================= -->
-      <div id="tab-dashboard" class="space-y-8 animate-fade-up">
+      <div id="tab-dashboard" class="space-y-6 md:space-y-8 animate-fade-up">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900">متابعة الفصل المباشرة</h1>
-            <p class="text-sm md:text-base text-slate-500 mt-1">سجل خروج الطلاب وراقب المؤقتات بدقة للحفاظ على انضباط الحصة</p>
+            <p class="text-xs md:text-base text-slate-500 mt-1">سجل خروج الطلاب وراقب المؤقتات بدقة للحفاظ على انضباط الحصة</p>
           </div>
 
-          <div class="flex items-center gap-3">
-            <button onclick="exportCSV()" class="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-5 py-3 rounded-2xl text-sm font-bold shadow-sm transition hover:shadow active:scale-95">
+          <div class="w-full sm:w-auto">
+            <button onclick="exportCSV()" class="w-full sm:w-auto flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-5 py-3 rounded-2xl text-xs md:text-sm font-bold shadow-sm transition hover:shadow active:scale-95">
               <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
               تصدير تقرير Excel
             </button>
@@ -190,43 +215,45 @@
         </div>
 
         <!-- كروت الإحصائيات -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200">
-            <div class="text-xs md:text-sm font-bold text-slate-500">الطلاب بالخارج الآن</div>
-            <div class="flex items-baseline gap-2 mt-2">
-              <span id="stat-active" class="text-3xl md:text-4xl font-extrabold text-brand-700">0</span>
-              <span class="text-xs md:text-sm font-semibold text-slate-400">/ الحد: <span id="stat-limit-text">1</span></span>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+          <div class="bg-white p-4 md:p-5 rounded-2xl md:rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200">
+            <div class="text-[11px] md:text-sm font-bold text-slate-500">الطلاب بالخارج الآن</div>
+            <div class="flex items-baseline gap-1.5 md:gap-2 mt-1 md:mt-2">
+              <span id="stat-active" class="text-2xl md:text-4xl font-extrabold text-brand-700">0</span>
+              <span class="text-[11px] md:text-sm font-semibold text-slate-400">/ الحد: <span id="stat-limit-text">1</span></span>
             </div>
           </div>
-          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200">
-            <div class="text-xs md:text-sm font-bold text-slate-500">استئذانات اليوم</div>
-            <div id="stat-today" class="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">0</div>
+          <div class="bg-white p-4 md:p-5 rounded-2xl md:rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200">
+            <div class="text-[11px] md:text-sm font-bold text-slate-500">استئذانات اليوم</div>
+            <div id="stat-today" class="text-2xl md:text-4xl font-extrabold text-slate-900 mt-1 md:mt-2">0</div>
           </div>
-          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200">
-            <div class="text-xs md:text-sm font-bold text-slate-500">الطلاب المسجلين</div>
-            <div id="stat-students" class="text-3xl md:text-4xl font-extrabold text-slate-900 mt-2">0</div>
+          <div class="bg-white p-4 md:p-5 rounded-2xl md:rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200">
+            <div class="text-[11px] md:text-sm font-bold text-slate-500">الطلاب المسجلين</div>
+            <div id="stat-students" class="text-2xl md:text-4xl font-extrabold text-slate-900 mt-1 md:mt-2">0</div>
           </div>
-          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200">
-            <div class="text-xs md:text-sm font-bold text-slate-500">المتأخرون عن الوقت</div>
-            <div id="stat-late" class="text-3xl md:text-4xl font-extrabold text-rose-600 mt-2">0</div>
+          <div class="bg-white p-4 md:p-5 rounded-2xl md:rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200">
+            <div class="text-[11px] md:text-sm font-bold text-slate-500">المتأخرون عن الوقت</div>
+            <div id="stat-late" class="text-2xl md:text-4xl font-extrabold text-rose-600 mt-1 md:mt-2">0</div>
           </div>
         </div>
 
         <!-- المستأذنون حالياً -->
-        <section class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
-          <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
-            <div class="flex items-center gap-3">
-              <span class="w-3.5 h-3.5 rounded-full bg-brand-600 animate-pulse-soft"></span>
-              <h2 class="text-lg md:text-xl font-extrabold text-slate-900">الطلاب خارج الفصل في هذا الوقت</h2>
+        <section class="bg-white p-5 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-5 md:space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 md:pb-5">
+            <div class="flex items-center gap-2.5">
+              <span class="w-3 h-3 rounded-full bg-brand-600 animate-pulse-soft"></span>
+              <h2 class="text-base md:text-xl font-extrabold text-slate-900">الطلاب خارج الفصل في هذا الوقت</h2>
             </div>
 
             <!-- خيارات الضوابط -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 flex-wrap">
               <!-- سعة الفصل -->
-              <div class="relative">
-                <button type="button" onclick="toggleDropdown('capacity-dropdown')" class="flex items-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-4 py-2.5 rounded-2xl text-xs md:text-sm font-bold text-slate-700 transition active:scale-95">
-                  <span>السعة:</span>
-                  <span id="selected-capacity-text" class="text-brand-700">طالب واحد</span>
+              <div class="relative flex-1 sm:flex-initial">
+                <button type="button" onclick="toggleDropdown('capacity-dropdown')" class="w-full flex items-center justify-between gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-3 py-2 md:px-4 md:py-2.5 rounded-xl md:rounded-2xl text-xs md:text-sm font-bold text-slate-700 transition active:scale-95">
+                  <div class="flex gap-1">
+                    <span>السعة:</span>
+                    <span id="selected-capacity-text" class="text-brand-700">طالب واحد</span>
+                  </div>
                   <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
                 <div id="capacity-dropdown" class="hidden absolute left-0 mt-2 w-44 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-30 animate-fade-up">
@@ -237,10 +264,12 @@
               </div>
 
               <!-- المهلة -->
-              <div class="relative">
-                <button type="button" onclick="toggleDropdown('duration-dropdown')" class="flex items-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-4 py-2.5 rounded-2xl text-xs md:text-sm font-bold text-slate-700 transition active:scale-95">
-                  <span>المهلة:</span>
-                  <span id="selected-duration-text" class="text-brand-700">5 دقائق</span>
+              <div class="relative flex-1 sm:flex-initial">
+                <button type="button" onclick="toggleDropdown('duration-dropdown')" class="w-full flex items-center justify-between gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-3 py-2 md:px-4 md:py-2.5 rounded-xl md:rounded-2xl text-xs md:text-sm font-bold text-slate-700 transition active:scale-95">
+                  <div class="flex gap-1">
+                    <span>المهلة:</span>
+                    <span id="selected-duration-text" class="text-brand-700">5 دقائق</span>
+                  </div>
                   <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
                 <div id="duration-dropdown" class="hidden absolute left-0 mt-2 w-44 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-30 animate-fade-up">
@@ -258,27 +287,27 @@
         </section>
 
         <!-- نموذج إصدار استئذان -->
-        <section class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
-          <div class="flex items-center justify-between">
+        <section class="bg-white p-5 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-5 md:space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h3 class="text-lg md:text-xl font-extrabold text-slate-900">إصدار تصريح خروج جديد</h3>
               <p class="text-xs md:text-sm text-slate-500 mt-0.5">اختر الطالب وحدد الوجهة لبدء المؤقت المباشر</p>
             </div>
-            <span id="capacity-warning-badge" class="hidden text-xs md:text-sm bg-rose-50 text-rose-700 border border-rose-200 font-extrabold px-3 py-1.5 rounded-xl">
+            <span id="capacity-warning-badge" class="hidden text-xs md:text-sm bg-rose-50 text-rose-700 border border-rose-200 font-extrabold px-3 py-1.5 rounded-xl self-start sm:self-auto">
               ⚠️ اكتمل الحد المسموح به لخروج الطلاب
             </span>
           </div>
 
-          <form onsubmit="handleGrantPass(event)" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form onsubmit="handleGrantPass(event)" class="space-y-4 md:space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 
               <!-- اختيار الطالب -->
               <div class="relative">
-                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-2">الطالب المستأذن</label>
+                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5 md:mb-2">الطالب المستأذن</label>
                 <input type="hidden" id="custom-student-value" required>
-                <button type="button" onclick="toggleDropdown('student-dropdown')" class="w-full flex items-center justify-between bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 text-sm md:text-base font-bold text-slate-800 transition active:scale-98">
-                  <span id="custom-student-label" class="text-slate-400">-- اضغط لاختيار الطالب من القائمة --</span>
-                  <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                <button type="button" onclick="toggleDropdown('student-dropdown')" class="w-full flex items-center justify-between bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-3.5 md:p-4 text-xs md:text-base font-bold text-slate-800 transition active:scale-98">
+                  <span id="custom-student-label" class="text-slate-400 truncate">-- اضغط لاختيار الطالب --</span>
+                  <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
                 <div id="student-dropdown" class="hidden absolute inset-x-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 z-40 max-h-60 overflow-y-auto custom-scroll animate-fade-up">
                   <input type="text" oninput="filterStudentDropdown(this.value)" placeholder="ابحث باسم الطالب..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs md:text-sm font-semibold mb-2 outline-none focus:border-brand-600">
@@ -290,11 +319,11 @@
 
               <!-- سبب الاستئذان -->
               <div class="relative">
-                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-2">سبب الاستئذان</label>
+                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5 md:mb-2">سبب الاستئذان</label>
                 <input type="hidden" id="custom-reason-value" value="دورة المياه">
-                <button type="button" onclick="toggleDropdown('reason-dropdown')" class="w-full flex items-center justify-between bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 text-sm md:text-base font-bold text-slate-800 transition active:scale-98">
+                <button type="button" onclick="toggleDropdown('reason-dropdown')" class="w-full flex items-center justify-between bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-3.5 md:p-4 text-xs md:text-base font-bold text-slate-800 transition active:scale-98">
                   <span id="custom-reason-label">دورة المياه</span>
-                  <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                  <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
                 <div id="reason-dropdown" class="hidden absolute inset-x-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 z-40 animate-fade-up">
                   <div onclick="selectReason('دورة المياه')" class="px-4 py-3 hover:bg-brand-50 hover:text-brand-700 rounded-xl font-bold text-xs md:text-sm cursor-pointer transition">دورة المياه</div>
@@ -308,7 +337,7 @@
 
             </div>
 
-            <button type="submit" id="btn-submit-pass" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-extrabold text-base md:text-lg py-4 rounded-2xl shadow-lg shadow-brand-700/20 hover:shadow-brand-700/30 transition duration-150 active:scale-98 cursor-pointer">
+            <button type="submit" id="btn-submit-pass" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-extrabold text-sm md:text-lg py-3.5 md:py-4 rounded-2xl shadow-lg shadow-brand-700/20 hover:shadow-brand-700/30 transition duration-150 active:scale-98 cursor-pointer">
               تأكيد تسجيل خروج الطالب الآن
             </button>
           </form>
@@ -317,24 +346,24 @@
 
       <!-- ================= تبويب 2: سجل الاستئذانات الكامل ================= -->
       <div id="tab-history" class="hidden space-y-6 animate-fade-up">
-        <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 class="text-2xl font-extrabold text-slate-900">سجل الاستئذانات السابق</h2>
-            <p class="text-sm text-slate-500 mt-1">تتبع جميع عمليات الخروج، الأوقات المستغرقة، وأسباب الخروج</p>
+            <h2 class="text-xl md:text-2xl font-extrabold text-slate-900">سجل الاستئذانات السابق</h2>
+            <p class="text-xs md:text-sm text-slate-500 mt-1">تتبع جميع عمليات الخروج، الأوقات المستغرقة، وأسباب الخروج</p>
           </div>
-          <input type="text" id="search-history-input" oninput="renderHistoryTable()" placeholder="ابحث باسم الطالب..." class="bg-white border border-slate-200 rounded-2xl px-5 py-3 text-sm font-semibold outline-none focus:border-brand-600 w-full md:w-80 shadow-sm">
+          <input type="text" id="search-history-input" oninput="renderHistoryTable()" placeholder="ابحث باسم الطالب..." class="bg-white border border-slate-200 rounded-2xl px-4 py-3 text-xs md:text-sm font-semibold outline-none focus:border-brand-600 w-full sm:w-80 shadow-sm">
         </div>
 
         <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
           <div class="overflow-x-auto">
-            <table class="w-full text-right text-sm">
+            <table class="w-full text-right text-xs md:text-sm">
               <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold">
                 <tr>
-                  <th class="py-4 px-6">اسم الطالب</th>
-                  <th class="py-4 px-6">سبب الخروج</th>
-                  <th class="py-4 px-6">وقت الخروج</th>
-                  <th class="py-4 px-6">المدة المستغرقة</th>
-                  <th class="py-4 px-6">الحالة</th>
+                  <th class="py-3.5 px-4 md:py-4 md:px-6">اسم الطالب</th>
+                  <th class="py-3.5 px-4 md:py-4 md:px-6">سبب الخروج</th>
+                  <th class="py-3.5 px-4 md:py-4 md:px-6">وقت الخروج</th>
+                  <th class="py-3.5 px-4 md:py-4 md:px-6">المدة المستغرقة</th>
+                  <th class="py-3.5 px-4 md:py-4 md:px-6">الحالة</th>
                 </tr>
               </thead>
               <tbody id="history-full-table-body" class="divide-y divide-slate-100 font-medium text-slate-700">
@@ -349,33 +378,33 @@
       <div id="tab-students" class="hidden space-y-6 animate-fade-up">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 class="text-2xl font-extrabold text-slate-900">قائمة طلاب الفصل</h2>
-            <p class="text-sm text-slate-500 mt-1">أضف طلاب جدد أو راجع بيانات الطلاب المسجلين</p>
+            <h2 class="text-xl md:text-2xl font-extrabold text-slate-900">قائمة طلاب الفصل</h2>
+            <p class="text-xs md:text-sm text-slate-500 mt-1">أضف طلاب جدد أو راجع بيانات الطلاب المسجلين</p>
           </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <!-- نموذج إضافة طالب -->
-          <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-            <h3 class="font-extrabold text-slate-900 text-lg">إضافة طالب جديد</h3>
+          <div class="bg-white p-5 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-extrabold text-slate-900 text-base md:text-lg">إضافة طالب جديد</h3>
             <form onsubmit="handleAddStudent(event)" class="space-y-4">
               <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1.5">اسم الطالب الثلاثي</label>
-                <input type="text" id="new-student-name" required placeholder="مثال: محمد علي الأحمد" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm font-semibold outline-none focus:border-brand-600">
+                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">اسم الطالب الثلاثي</label>
+                <input type="text" id="new-student-name" required placeholder="مثال: محمد علي الأحمد" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs md:text-sm font-semibold outline-none focus:border-brand-600">
               </div>
               <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1.5">الرقم الأكاديمي / الباركود</label>
-                <input type="text" id="new-student-number" placeholder="اختياري" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm font-semibold outline-none focus:border-brand-600">
+                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">الرقم الأكاديمي / الباركود</label>
+                <input type="text" id="new-student-number" placeholder="اختياري" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs md:text-sm font-semibold outline-none focus:border-brand-600">
               </div>
-              <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-bold py-3.5 rounded-2xl text-sm transition active:scale-95 cursor-pointer">
+              <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-bold py-3.5 rounded-2xl text-xs md:text-sm transition active:scale-95 cursor-pointer">
                 حفظ الطالب في القائمة
               </button>
             </form>
           </div>
 
           <!-- بطاقات عرض الطلاب -->
-          <div class="lg:col-span-2 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-            <h3 class="font-extrabold text-slate-900 text-lg">الطلاب المسجلون (<span id="students-count-badge">0</span>)</h3>
+          <div class="lg:col-span-2 bg-white p-5 md:p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-extrabold text-slate-900 text-base md:text-lg">الطلاب المسجلون (<span id="students-count-badge">0</span>)</h3>
             <div id="students-grid-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-96 overflow-y-auto custom-scroll pr-1">
               <!-- تتولد بطاقات الطلاب هنا -->
             </div>
@@ -383,38 +412,36 @@
         </div>
       </div>
 
-      <!-- ================= تبويب 4: إدارة صلاحيات المعلمين (القائمة المماثلة للطلاب) ================= -->
-      <div id="tab-teachers" class="hidden space-y-6 animate-fade-up">
-        <div class="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h2 class="text-2xl font-extrabold text-slate-900">صلاحيات المعلمين المعتمدين</h2>
-            <p class="text-sm text-slate-500 mt-1">أضف حسابات المعلمين المصرح لهم بالدخول وإدارة الاستئذانات في النظام</p>
-          </div>
+      <!-- ================= تبويب 4: إدارة صلاحيات المعلمين (بخطوط كبيرة وواضحة جداً) ================= -->
+      <div id="tab-teachers" class="hidden space-y-6 md:space-y-8 animate-fade-up">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">صلاحيات المعلمين المعتمدين</h2>
+          <p class="text-sm md:text-base text-slate-500 mt-1">أضف حسابات المعلمين المصرح لهم بالدخول وإدارة الاستئذانات في النظام</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <!-- نموذج إضافة معلم جديد -->
-          <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-            <h3 class="font-extrabold text-slate-900 text-lg">منح صلاحية لمعلم جديد</h3>
-            <form onsubmit="handleAddTeacher(event)" class="space-y-4">
+          <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-5">
+            <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">منح صلاحية لمعلم جديد</h3>
+            <form onsubmit="handleAddTeacher(event)" class="space-y-5">
               <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1.5">البريد الإلكتروني (Google)</label>
-                <input type="email" id="new-teacher-email" required placeholder="teacher@gmail.com" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm font-semibold outline-none focus:border-brand-600">
+                <label class="block text-sm md:text-base font-bold text-slate-700 mb-2">البريد الإلكتروني (Google)</label>
+                <input type="email" id="new-teacher-email" required placeholder="teacher@gmail.com" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm md:text-base font-semibold outline-none focus:border-brand-600">
               </div>
               <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1.5">اسم المعلم</label>
-                <input type="text" id="new-teacher-name" placeholder="مثال: أ. عبدالله" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm font-semibold outline-none focus:border-brand-600">
+                <label class="block text-sm md:text-base font-bold text-slate-700 mb-2">اسم المعلم</label>
+                <input type="text" id="new-teacher-name" placeholder="مثال: أ. عبدالله" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm md:text-base font-semibold outline-none focus:border-brand-600">
               </div>
-              <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-bold py-3.5 rounded-2xl text-sm transition active:scale-95 cursor-pointer">
+              <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-extrabold py-4 rounded-2xl text-base md:text-lg transition active:scale-95 cursor-pointer shadow-md shadow-brand-700/20">
                 إضافة المعلم واعتماد الصلاحية
               </button>
             </form>
           </div>
 
-          <!-- قائمة المعلمين المعتمدين -->
-          <div class="lg:col-span-2 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-            <h3 class="font-extrabold text-slate-900 text-lg">المعلمون الحاصلون على الصلاحية (<span id="teachers-count-badge">0</span>)</h3>
-            <div id="teachers-grid-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-96 overflow-y-auto custom-scroll pr-1">
+          <!-- قائمة المعلمين المعتمدين بخطوط وتنسيق واضح -->
+          <div class="lg:col-span-2 bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-5">
+            <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">المعلمون الحاصلون على الصلاحية (<span id="teachers-count-badge">0</span>)</h3>
+            <div id="teachers-grid-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto custom-scroll pr-1">
               <!-- تتولد بطاقات المعلمين هنا -->
             </div>
           </div>
@@ -456,8 +483,31 @@
       setInterval(updateLiveTimers, 1000);
     });
 
+    // التحكم بقائمة الجوال الجانبية
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById("sidebar-menu");
+      const overlay = document.getElementById("mobile-overlay");
+      const isClosed = sidebar.classList.contains("translate-x-full");
+
+      if (isClosed) {
+        sidebar.classList.remove("translate-x-full");
+        overlay.classList.remove("hidden");
+      } else {
+        sidebar.classList.add("translate-x-full");
+        overlay.classList.add("hidden");
+      }
+    }
+
     // التنقل بين الأقسام الجانبية
     function switchTab(tabId) {
+      // إغلاق قائمة الجوال عند الضغط على أي عنصر
+      const sidebar = document.getElementById("sidebar-menu");
+      const overlay = document.getElementById("mobile-overlay");
+      if (window.innerWidth < 768) {
+        sidebar.classList.add("translate-x-full");
+        overlay.classList.add("hidden");
+      }
+
       ['dashboard', 'history', 'students', 'teachers'].forEach(t => {
         const tabEl = document.getElementById(`tab-${t}`);
         if (tabEl) tabEl.classList.toggle('hidden', t !== tabId);
@@ -650,22 +700,22 @@
 
       if (activePasses.length === 0) {
         activeContainer.innerHTML = `
-          <div class="col-span-1 md:col-span-2 text-center py-10 text-slate-400 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 text-sm font-bold">
+          <div class="col-span-1 md:col-span-2 text-center py-8 md:py-10 text-slate-400 bg-slate-50 rounded-2xl md:rounded-3xl border-2 border-dashed border-slate-200 text-xs md:text-sm font-bold">
             ✓ جميع الطلاب متواجدون داخل الفصل في هذه اللحظة
           </div>
         `;
       } else {
         activeContainer.innerHTML = activePasses.map(p => {
           return `
-            <div id="card-${p.id}" class="bg-white p-5 rounded-3xl border-2 border-brand-200 shadow-sm flex items-center justify-between transition duration-200 hover:shadow-md animate-fade-up">
-              <div class="space-y-1.5">
+            <div id="card-${p.id}" class="bg-white p-4 md:p-5 rounded-2xl md:rounded-3xl border-2 border-brand-200 shadow-sm flex items-center justify-between transition duration-200 hover:shadow-md animate-fade-up">
+              <div class="space-y-1">
                 <div class="font-extrabold text-slate-900 text-base md:text-lg">${p.students?.name || 'طالب'}</div>
                 <div class="text-xs md:text-sm text-slate-500 font-medium">الوجهة: <span class="font-bold text-slate-700">${p.reason}</span></div>
                 <div class="text-xs md:text-sm font-bold text-brand-700" id="timer-${p.id}" data-timeout="${p.time_out}">
                   جارٍ التحديث...
                 </div>
               </div>
-              <button onclick="returnStudent('${p.id}', '${p.time_out}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs md:text-sm font-extrabold px-5 py-3 rounded-2xl shadow-md shadow-emerald-600/20 transition duration-150 active:scale-95 cursor-pointer">
+              <button onclick="returnStudent('${p.id}', '${p.time_out}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs md:text-sm font-extrabold px-4 py-2.5 md:px-5 md:py-3 rounded-xl md:rounded-2xl shadow-md shadow-emerald-600/20 transition duration-150 active:scale-95 cursor-pointer">
                 تسجيل العودة ✓
               </button>
             </div>
@@ -709,14 +759,14 @@
         const timeFormatted = new Date(p.time_out).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' });
         return `
           <tr class="hover:bg-slate-50/80 transition duration-150">
-            <td class="py-4 px-6 font-extrabold text-slate-900">${p.students?.name || 'مجهول'}</td>
-            <td class="py-4 px-6 text-slate-600 font-semibold">${p.reason}</td>
-            <td class="py-4 px-6 text-slate-500 font-mono text-xs">${timeFormatted}</td>
-            <td class="py-4 px-6 text-slate-800 font-bold">${p.duration_minutes ? p.duration_minutes + ' دقيقة' : 'خارج الفصل'}</td>
-            <td class="py-4 px-6">
+            <td class="py-3.5 px-4 md:py-4 md:px-6 font-extrabold text-slate-900">${p.students?.name || 'مجهول'}</td>
+            <td class="py-3.5 px-4 md:py-4 md:px-6 text-slate-600 font-semibold">${p.reason}</td>
+            <td class="py-3.5 px-4 md:py-4 md:px-6 text-slate-500 font-mono text-xs">${timeFormatted}</td>
+            <td class="py-3.5 px-4 md:py-4 md:px-6 text-slate-800 font-bold">${p.duration_minutes ? p.duration_minutes + ' دقيقة' : 'خارج الفصل'}</td>
+            <td class="py-3.5 px-4 md:py-4 md:px-6">
               ${p.status === 'active' 
-                ? '<span class="bg-amber-100 text-amber-800 font-extrabold text-xs px-3 py-1 rounded-full">بالخارج الآن</span>' 
-                : '<span class="bg-emerald-100 text-emerald-800 font-extrabold text-xs px-3 py-1 rounded-full">تمت العودة</span>'}
+                ? '<span class="bg-amber-100 text-amber-800 font-extrabold text-[11px] md:text-xs px-2.5 py-1 rounded-full">بالخارج الآن</span>' 
+                : '<span class="bg-emerald-100 text-emerald-800 font-extrabold text-[11px] md:text-xs px-2.5 py-1 rounded-full">تمت العودة</span>'}
             </td>
           </tr>
         `;
@@ -734,10 +784,10 @@
       grid.innerHTML = studentsList.map(s => `
         <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex items-center justify-between">
           <div>
-            <div class="font-extrabold text-slate-900 text-sm">${s.name}</div>
-            <div class="text-xs text-slate-400 font-mono">${s.student_number || 'بدون رقم'}</div>
+            <div class="font-extrabold text-slate-900 text-sm md:text-base">${s.name}</div>
+            <div class="text-xs md:text-sm text-slate-400 font-mono">${s.student_number || 'بدون رقم'}</div>
           </div>
-          <button onclick="deleteStudent('${s.id}')" class="text-rose-600 hover:text-rose-700 font-bold text-xs p-2 rounded-xl hover:bg-rose-50 transition active:scale-95">
+          <button onclick="deleteStudent('${s.id}')" class="text-rose-600 hover:text-rose-700 font-bold text-xs md:text-sm p-2 rounded-xl hover:bg-rose-50 transition active:scale-95">
             حذف
           </button>
         </div>
@@ -750,7 +800,7 @@
       loadData();
     }
 
-    // إدارة المعلمين (مماثلة للطلاب)
+    // إدارة المعلمين (بخطوط كبيرة وواضحة جداً)
     async function loadTeachers() {
       const { data } = await db.from("teachers").select("*").order("created_at", { ascending: false });
       teachersList = data || [];
@@ -765,14 +815,14 @@
       if (!grid) return;
 
       grid.innerHTML = teachersList.map(t => `
-        <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex items-center justify-between">
-          <div>
-            <div class="font-extrabold text-slate-900 text-sm">${t.name || 'معلم معتمد'}</div>
-            <div class="text-xs text-slate-500 font-mono">${t.email}</div>
+        <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl flex items-center justify-between gap-3 shadow-xs">
+          <div class="space-y-1">
+            <div class="font-extrabold text-slate-900 text-base md:text-lg">${t.name || 'معلم معتمد'}</div>
+            <div class="text-xs md:text-sm text-slate-600 font-mono font-medium">${t.email}</div>
           </div>
           ${t.email !== currentUser.email ? `
-            <button onclick="removeTeacher('${t.id}')" class="text-rose-600 hover:text-rose-700 font-bold text-xs p-2 rounded-xl hover:bg-rose-50 transition active:scale-95">حذف</button>
-          ` : '<span class="text-brand-700 font-extrabold text-xs px-3 py-1 bg-brand-50 rounded-lg">حسابك</span>'}
+            <button onclick="removeTeacher('${t.id}')" class="text-rose-600 hover:text-rose-700 font-extrabold text-sm md:text-base px-3.5 py-2 rounded-xl hover:bg-rose-50 transition active:scale-95">حذف</button>
+          ` : '<span class="text-brand-700 font-extrabold text-xs md:text-sm px-3.5 py-1.5 bg-brand-100 rounded-xl">حسابك الحالي</span>'}
         </div>
       `).join('');
     }
@@ -822,7 +872,7 @@
       }]);
 
       document.getElementById("custom-student-value").value = "";
-      document.getElementById("custom-student-label").innerText = "-- اضغط لاختيار الطالب من القائمة --";
+      document.getElementById("custom-student-label").innerText = "-- اضغط لاختيار الطالب --";
       document.getElementById("custom-student-label").classList.add("text-slate-400");
       loadData();
     }
