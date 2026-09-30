@@ -133,13 +133,11 @@
       </button>
     </header>
 
-    <!-- الخلفية المعتمة لإغلاق القائمة في الجوال -->
     <div id="mobile-overlay" onclick="toggleMobileSidebar()" class="hidden md:hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 transition-opacity"></div>
 
-    <!-- القائمة الجانبية (ثابتة على الشاشات الكبيرة + Slide-over Drawer للجوال) -->
+    <!-- القائمة الجانبية (Sidebar) -->
     <aside id="sidebar-menu" class="fixed md:static inset-y-0 right-0 z-50 w-72 bg-white border-l border-slate-200 flex flex-col justify-between p-6 shrink-0 shadow-xl md:shadow-sm transform translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
       <div class="space-y-6">
-        <!-- هوية الموقع وزر إغلاق الجوال -->
         <div class="flex items-center justify-between pb-4 border-b border-slate-100">
           <div class="flex items-center gap-3">
             <div class="w-11 h-11 rounded-2xl bg-brand-700 text-white flex items-center justify-center font-extrabold text-lg shadow-md shadow-brand-700/25">
@@ -150,37 +148,43 @@
               <span class="text-xs font-semibold text-brand-600">لوحة الفصل الذكية</span>
             </div>
           </div>
-          <!-- زر إغلاق القائمة في الجوال -->
-          <button onclick="toggleMobileSidebar()" class="md:hidden p-1.5 rounded-lg bg-slate-100 text-slate-500 font-bold">
-            ✕
-          </button>
+          <button onclick="toggleMobileSidebar()" class="md:hidden p-1.5 rounded-lg bg-slate-100 text-slate-500 font-bold">✕</button>
         </div>
 
         <!-- روابط التنقل -->
-        <nav class="space-y-2">
+        <nav class="space-y-1.5">
           <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-brand-700 bg-brand-50 border border-brand-200/80 transition duration-150 active:scale-98">
             <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
             لوحة الاستئذان المباشر
           </button>
 
-          <button onclick="switchTab('history')" id="nav-history" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition duration-150 active:scale-98">
-            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            سجل الاستئذانات السابق
+          <button onclick="switchTab('classes')" id="nav-classes" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition duration-150 active:scale-98">
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            الصفوف والشُعب
           </button>
 
           <button onclick="switchTab('students')" id="nav-students" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition duration-150 active:scale-98">
             <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-            إدارة الطلاب والقوائم
+            إدارة الطلاب
+          </button>
+
+          <button onclick="switchTab('history')" id="nav-history" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition duration-150 active:scale-98">
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            سجل الاستئذانات
           </button>
 
           <button onclick="switchTab('teachers')" id="nav-teachers" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition duration-150 active:scale-98">
             <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             صلاحيات المعلمين
           </button>
+
+          <button onclick="switchTab('settings')" id="nav-settings" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition duration-150 active:scale-98">
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+            الإعدادات والضوابط
+          </button>
         </nav>
       </div>
 
-      <!-- معلومات المعلم وزر الخروج -->
       <div class="space-y-4 pt-6 border-t border-slate-100">
         <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200">
           <div class="text-xs text-slate-400 font-bold mb-1">المعلم الحالي:</div>
@@ -239,46 +243,9 @@
 
         <!-- المستأذنون حالياً -->
         <section class="bg-white p-5 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-5 md:space-y-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4 md:pb-5">
-            <div class="flex items-center gap-2.5">
-              <span class="w-3 h-3 rounded-full bg-brand-600 animate-pulse-soft"></span>
-              <h2 class="text-base md:text-xl font-extrabold text-slate-900">الطلاب خارج الفصل في هذا الوقت</h2>
-            </div>
-
-            <!-- خيارات الضوابط -->
-            <div class="flex items-center gap-2 flex-wrap">
-              <!-- سعة الفصل -->
-              <div class="relative flex-1 sm:flex-initial">
-                <button type="button" onclick="toggleDropdown('capacity-dropdown')" class="w-full flex items-center justify-between gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-3 py-2 md:px-4 md:py-2.5 rounded-xl md:rounded-2xl text-xs md:text-sm font-bold text-slate-700 transition active:scale-95">
-                  <div class="flex gap-1">
-                    <span>السعة:</span>
-                    <span id="selected-capacity-text" class="text-brand-700">طالب واحد</span>
-                  </div>
-                  <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </button>
-                <div id="capacity-dropdown" class="hidden absolute left-0 mt-2 w-44 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-30 animate-fade-up">
-                  <div onclick="selectCapacity(1, 'طالب واحد')" class="px-4 py-2.5 hover:bg-brand-50 hover:text-brand-700 font-bold text-xs md:text-sm cursor-pointer">طالب واحد فقط</div>
-                  <div onclick="selectCapacity(2, 'طالبان')" class="px-4 py-2.5 hover:bg-brand-50 hover:text-brand-700 font-bold text-xs md:text-sm cursor-pointer">طالبان معاً</div>
-                  <div onclick="selectCapacity(3, '3 طلاب')" class="px-4 py-2.5 hover:bg-brand-50 hover:text-brand-700 font-bold text-xs md:text-sm cursor-pointer">3 طلاب معاً</div>
-                </div>
-              </div>
-
-              <!-- المهلة -->
-              <div class="relative flex-1 sm:flex-initial">
-                <button type="button" onclick="toggleDropdown('duration-dropdown')" class="w-full flex items-center justify-between gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-3 py-2 md:px-4 md:py-2.5 rounded-xl md:rounded-2xl text-xs md:text-sm font-bold text-slate-700 transition active:scale-95">
-                  <div class="flex gap-1">
-                    <span>المهلة:</span>
-                    <span id="selected-duration-text" class="text-brand-700">5 دقائق</span>
-                  </div>
-                  <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </button>
-                <div id="duration-dropdown" class="hidden absolute left-0 mt-2 w-44 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-30 animate-fade-up">
-                  <div onclick="selectDuration(5, '5 دقائق')" class="px-4 py-2.5 hover:bg-brand-50 hover:text-brand-700 font-bold text-xs md:text-sm cursor-pointer">5 دقائق</div>
-                  <div onclick="selectDuration(7, '7 دقائق')" class="px-4 py-2.5 hover:bg-brand-50 hover:text-brand-700 font-bold text-xs md:text-sm cursor-pointer">7 دقائق</div>
-                  <div onclick="selectDuration(10, '10 دقائق')" class="px-4 py-2.5 hover:bg-brand-50 hover:text-brand-700 font-bold text-xs md:text-sm cursor-pointer">10 دقائق</div>
-                </div>
-              </div>
-            </div>
+          <div class="flex items-center gap-2.5 border-b border-slate-100 pb-4">
+            <span class="w-3 h-3 rounded-full bg-brand-600 animate-pulse-soft"></span>
+            <h2 class="text-base md:text-xl font-extrabold text-slate-900">الطلاب خارج الفصل في هذا الوقت</h2>
           </div>
 
           <div id="active-passes-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -309,8 +276,8 @@
                   <span id="custom-student-label" class="text-slate-400 truncate">-- اضغط لاختيار الطالب --</span>
                   <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
-                <div id="student-dropdown" class="hidden absolute inset-x-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 z-40 max-h-60 overflow-y-auto custom-scroll animate-fade-up">
-                  <input type="text" oninput="filterStudentDropdown(this.value)" placeholder="ابحث باسم الطالب..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs md:text-sm font-semibold mb-2 outline-none focus:border-brand-600">
+                <div id="student-dropdown" class="hidden absolute inset-x-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 z-40 max-h-64 overflow-y-auto custom-scroll animate-fade-up">
+                  <input type="text" oninput="filterStudentDropdown(this.value)" placeholder="ابحث باسم الطالب أو الشعبة..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs md:text-sm font-semibold mb-2 outline-none focus:border-brand-600">
                   <div id="student-options-container" class="space-y-1">
                     <!-- خيارات الطلاب -->
                   </div>
@@ -344,7 +311,94 @@
         </section>
       </div>
 
-      <!-- ================= تبويب 2: سجل الاستئذانات الكامل ================= -->
+      <!-- ================= تبويب 2: نظام الصفوف والشُعب ================= -->
+      <div id="tab-classes" class="hidden space-y-6 md:space-y-8 animate-fade-up">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">الصفوف والشُعب الدراسية</h2>
+          <p class="text-sm md:text-base text-slate-500 mt-1">أنشئ الشُعب داخل صفوف المرحلة الثانوية ونظّم الطلاب وفقها</p>
+        </div>
+
+        <!-- أزرار التبديل بين الصفوف (أول ثانوي، ثاني ثانوي، ثالث ثانوي) -->
+        <div class="flex gap-2 p-1.5 bg-slate-100 rounded-2xl max-w-md">
+          <button onclick="switchGradeFilter('أول ثانوي')" id="grade-tab-1" class="flex-1 py-3 rounded-xl font-extrabold text-xs md:text-sm bg-white text-brand-700 shadow-sm transition">أول ثانوي</button>
+          <button onclick="switchGradeFilter('ثاني ثانوي')" id="grade-tab-2" class="flex-1 py-3 rounded-xl font-extrabold text-xs md:text-sm text-slate-600 hover:text-slate-900 transition">ثاني ثانوي</button>
+          <button onclick="switchGradeFilter('ثالث ثانوي')" id="grade-tab-3" class="flex-1 py-3 rounded-xl font-extrabold text-xs md:text-sm text-slate-600 hover:text-slate-900 transition">ثالث ثانوي</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- نموذج إنشاء شعبة جديدة -->
+          <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-5">
+            <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">إنشاء شُعبة جديدة</h3>
+            <form onsubmit="handleAddClass(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">الصف الدراسي</label>
+                <input type="text" id="new-class-grade" readonly class="w-full bg-slate-100 border border-slate-200 rounded-2xl p-3.5 text-sm font-bold text-brand-700 outline-none">
+              </div>
+              <div>
+                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">اسم الشُعبة</label>
+                <input type="text" id="new-class-name" required placeholder="مثال: شعبة 1 (أو 101)" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm font-semibold outline-none focus:border-brand-600">
+              </div>
+              <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-extrabold py-3.5 rounded-2xl text-sm md:text-base transition active:scale-95 cursor-pointer shadow-md shadow-brand-700/20">
+                حفظ الشُعبة الآن
+              </button>
+            </form>
+          </div>
+
+          <!-- قائمة الشُعب في الصف المختار -->
+          <div class="lg:col-span-2 bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">الشُعب التابعة لـ (<span id="current-grade-display">أول ثانوي</span>)</h3>
+            <div id="classes-grid-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[480px] overflow-y-auto custom-scroll pr-1">
+              <!-- تتولد بطاقات الشُعب هنا -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= تبويب 3: إدارة الطلاب ================= -->
+      <div id="tab-students" class="hidden space-y-6 md:space-y-8 animate-fade-up">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">إدارة طلاب الفصل</h2>
+          <p class="text-sm md:text-base text-slate-500 mt-1">أضف طلاب جدد ووزعهم على الشُعب المسجلة</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- نموذج إضافة طالب -->
+          <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">إضافة طالب جديد</h3>
+            <form onsubmit="handleAddStudent(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">اسم الطالب الثلاثي</label>
+                <input type="text" id="new-student-name" required placeholder="مثال: محمد علي الأحمد" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs md:text-sm font-semibold outline-none focus:border-brand-600">
+              </div>
+              <div>
+                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">الشعبة والصف</label>
+                <select id="new-student-class" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs md:text-sm font-semibold outline-none focus:border-brand-600">
+                  <option value="">-- اختر الشُعبة --</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">الرقم الأكاديمي / الباركود</label>
+                <input type="text" id="new-student-number" placeholder="اختياري" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs md:text-sm font-semibold outline-none focus:border-brand-600">
+              </div>
+              <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-bold py-3.5 rounded-2xl text-xs md:text-sm transition active:scale-95 cursor-pointer">
+                حفظ الطالب في القائمة
+              </button>
+            </form>
+          </div>
+
+          <!-- بطاقات عرض الطلاب -->
+          <div class="lg:col-span-2 bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">الطلاب المسجلون (<span id="students-count-badge">0</span>)</h3>
+            </div>
+            <div id="students-grid-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[480px] overflow-y-auto custom-scroll pr-1">
+              <!-- تتولد بطاقات الطلاب هنا -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= تبويب 4: سجل الاستئذانات الكامل ================= -->
       <div id="tab-history" class="hidden space-y-6 animate-fade-up">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
@@ -360,6 +414,7 @@
               <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold">
                 <tr>
                   <th class="py-3.5 px-4 md:py-4 md:px-6">اسم الطالب</th>
+                  <th class="py-3.5 px-4 md:py-4 md:px-6">الشعبة</th>
                   <th class="py-3.5 px-4 md:py-4 md:px-6">سبب الخروج</th>
                   <th class="py-3.5 px-4 md:py-4 md:px-6">وقت الخروج</th>
                   <th class="py-3.5 px-4 md:py-4 md:px-6">المدة المستغرقة</th>
@@ -374,45 +429,7 @@
         </div>
       </div>
 
-      <!-- ================= تبويب 3: إدارة الطلاب ================= -->
-      <div id="tab-students" class="hidden space-y-6 animate-fade-up">
-        <div class="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h2 class="text-xl md:text-2xl font-extrabold text-slate-900">قائمة طلاب الفصل</h2>
-            <p class="text-xs md:text-sm text-slate-500 mt-1">أضف طلاب جدد أو راجع بيانات الطلاب المسجلين</p>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- نموذج إضافة طالب -->
-          <div class="bg-white p-5 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-            <h3 class="font-extrabold text-slate-900 text-base md:text-lg">إضافة طالب جديد</h3>
-            <form onsubmit="handleAddStudent(event)" class="space-y-4">
-              <div>
-                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">اسم الطالب الثلاثي</label>
-                <input type="text" id="new-student-name" required placeholder="مثال: محمد علي الأحمد" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs md:text-sm font-semibold outline-none focus:border-brand-600">
-              </div>
-              <div>
-                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">الرقم الأكاديمي / الباركود</label>
-                <input type="text" id="new-student-number" placeholder="اختياري" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs md:text-sm font-semibold outline-none focus:border-brand-600">
-              </div>
-              <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-bold py-3.5 rounded-2xl text-xs md:text-sm transition active:scale-95 cursor-pointer">
-                حفظ الطالب في القائمة
-              </button>
-            </form>
-          </div>
-
-          <!-- بطاقات عرض الطلاب -->
-          <div class="lg:col-span-2 bg-white p-5 md:p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-            <h3 class="font-extrabold text-slate-900 text-base md:text-lg">الطلاب المسجلون (<span id="students-count-badge">0</span>)</h3>
-            <div id="students-grid-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-96 overflow-y-auto custom-scroll pr-1">
-              <!-- تتولد بطاقات الطلاب هنا -->
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ================= تبويب 4: إدارة صلاحيات المعلمين (بخطوط كبيرة وواضحة جداً) ================= -->
+      <!-- ================= تبويب 5: صلاحيات المعلمين ================= -->
       <div id="tab-teachers" class="hidden space-y-6 md:space-y-8 animate-fade-up">
         <div>
           <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">صلاحيات المعلمين المعتمدين</h2>
@@ -420,7 +437,6 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- نموذج إضافة معلم جديد -->
           <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-5">
             <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">منح صلاحية لمعلم جديد</h3>
             <form onsubmit="handleAddTeacher(event)" class="space-y-5">
@@ -438,11 +454,42 @@
             </form>
           </div>
 
-          <!-- قائمة المعلمين المعتمدين بخطوط وتنسيق واضح -->
           <div class="lg:col-span-2 bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-5">
             <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">المعلمون الحاصلون على الصلاحية (<span id="teachers-count-badge">0</span>)</h3>
             <div id="teachers-grid-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto custom-scroll pr-1">
               <!-- تتولد بطاقات المعلمين هنا -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= تبويب 6: الإعدادات والضوابط المدرسية ================= -->
+      <div id="tab-settings" class="hidden space-y-6 md:space-y-8 animate-fade-up">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">إعدادات وضوابط الفصل</h2>
+          <p class="text-sm md:text-base text-slate-500 mt-1">تحكم بالحد الأقصى للطلاب المستأذنين وزمن الإذن المسموح به</p>
+        </div>
+
+        <div class="bg-white p-6 md:p-10 rounded-3xl border border-slate-200 shadow-sm max-w-2xl space-y-8">
+          <!-- إعداد سعة الاستئذان -->
+          <div class="space-y-3 pb-6 border-b border-slate-100">
+            <label class="block text-base md:text-lg font-extrabold text-slate-900">الحد الأقصى لخروج الطلاب في نفس الوقت</label>
+            <p class="text-xs md:text-sm text-slate-500">يمنع النظام خروج أكثر من هذا العدد معاً إلا في الحالات الطارئة.</p>
+            <div class="grid grid-cols-3 gap-3 pt-2">
+              <button type="button" onclick="saveCapacitySetting(1)" id="btn-cap-1" class="py-3.5 rounded-2xl font-extrabold text-sm border-2 border-brand-600 bg-brand-50 text-brand-700 transition">طالب واحد</button>
+              <button type="button" onclick="saveCapacitySetting(2)" id="btn-cap-2" class="py-3.5 rounded-2xl font-extrabold text-sm border-2 border-slate-200 hover:bg-slate-50 text-slate-700 transition">طالبان</button>
+              <button type="button" onclick="saveCapacitySetting(3)" id="btn-cap-3" class="py-3.5 rounded-2xl font-extrabold text-sm border-2 border-slate-200 hover:bg-slate-50 text-slate-700 transition">3 طلاب</button>
+            </div>
+          </div>
+
+          <!-- إعداد المهلة المحددة -->
+          <div class="space-y-3">
+            <label class="block text-base md:text-lg font-extrabold text-slate-900">المهلة القصوى للاستئذان (بالدقائق)</label>
+            <p class="text-xs md:text-sm text-slate-500">يتحول العداد للون الأحمر ويبدأ بالتنبيه في حال تخطي هذه المدة.</p>
+            <div class="grid grid-cols-3 gap-3 pt-2">
+              <button type="button" onclick="saveDurationSetting(5)" id="btn-dur-5" class="py-3.5 rounded-2xl font-extrabold text-sm border-2 border-brand-600 bg-brand-50 text-brand-700 transition">5 دقائق</button>
+              <button type="button" onclick="saveDurationSetting(7)" id="btn-dur-7" class="py-3.5 rounded-2xl font-extrabold text-sm border-2 border-slate-200 hover:bg-slate-50 text-slate-700 transition">7 دقائق</button>
+              <button type="button" onclick="saveDurationSetting(10)" id="btn-dur-10" class="py-3.5 rounded-2xl font-extrabold text-sm border-2 border-slate-200 hover:bg-slate-50 text-slate-700 transition">10 دقائق</button>
             </div>
           </div>
         </div>
@@ -459,9 +506,11 @@
 
     let currentUser = null;
     let studentsList = [];
+    let classesList = [];
     let passesList = [];
     let teachersList = [];
 
+    let currentSelectedGrade = 'أول ثانوي';
     let maxCapacity = parseInt(localStorage.getItem('pass_max_cap') || '1');
     let maxAllowedDuration = parseInt(localStorage.getItem('pass_max_dur') || '5');
 
@@ -471,6 +520,9 @@
           closeAllDropdowns();
         }
       });
+
+      document.getElementById('new-class-grade').value = currentSelectedGrade;
+      applySettingButtonStyles();
 
       const { data: { session } } = await db.auth.getSession();
       if (session?.user) {
@@ -498,9 +550,8 @@
       }
     }
 
-    // التنقل بين الأقسام الجانبية
+    // التنقل بين الأقسام
     function switchTab(tabId) {
-      // إغلاق قائمة الجوال عند الضغط على أي عنصر
       const sidebar = document.getElementById("sidebar-menu");
       const overlay = document.getElementById("mobile-overlay");
       if (window.innerWidth < 768) {
@@ -508,7 +559,7 @@
         overlay.classList.add("hidden");
       }
 
-      ['dashboard', 'history', 'students', 'teachers'].forEach(t => {
+      ['dashboard', 'classes', 'students', 'history', 'teachers', 'settings'].forEach(t => {
         const tabEl = document.getElementById(`tab-${t}`);
         if (tabEl) tabEl.classList.toggle('hidden', t !== tabId);
 
@@ -526,6 +577,7 @@
 
       if (tabId === 'history') renderHistoryTable();
       if (tabId === 'students') renderStudentsManager();
+      if (tabId === 'classes') renderClassesManager();
       if (tabId === 'teachers') renderTeachersManager();
     }
 
@@ -540,21 +592,44 @@
       document.querySelectorAll('[id$="-dropdown"]').forEach(el => el.classList.add('hidden'));
     }
 
-    function selectCapacity(val, text) {
+    // إعدادات السعة والمدة
+    function saveCapacitySetting(val) {
       maxCapacity = val;
       localStorage.setItem('pass_max_cap', val);
-      document.getElementById('selected-capacity-text').innerText = text;
       document.getElementById('stat-limit-text').innerText = val;
-      closeAllDropdowns();
+      applySettingButtonStyles();
       checkCapacityLimit();
     }
 
-    function selectDuration(val, text) {
+    function saveDurationSetting(val) {
       maxAllowedDuration = val;
       localStorage.setItem('pass_max_dur', val);
-      document.getElementById('selected-duration-text').innerText = text;
-      closeAllDropdowns();
+      applySettingButtonStyles();
       renderPasses();
+    }
+
+    function applySettingButtonStyles() {
+      [1, 2, 3].forEach(c => {
+        const btn = document.getElementById(`btn-cap-${c}`);
+        if (btn) {
+          if (c === maxCapacity) {
+            btn.className = "py-3.5 rounded-2xl font-extrabold text-sm border-2 border-brand-600 bg-brand-50 text-brand-700 transition";
+          } else {
+            btn.className = "py-3.5 rounded-2xl font-extrabold text-sm border-2 border-slate-200 hover:bg-slate-50 text-slate-700 transition";
+          }
+        }
+      });
+
+      [5, 7, 10].forEach(d => {
+        const btn = document.getElementById(`btn-dur-${d}`);
+        if (btn) {
+          if (d === maxAllowedDuration) {
+            btn.className = "py-3.5 rounded-2xl font-extrabold text-sm border-2 border-brand-600 bg-brand-50 text-brand-700 transition";
+          } else {
+            btn.className = "py-3.5 rounded-2xl font-extrabold text-sm border-2 border-slate-200 hover:bg-slate-50 text-slate-700 transition";
+          }
+        }
+      });
     }
 
     function selectReason(reason) {
@@ -576,13 +651,22 @@
       const container = document.getElementById('student-options-container');
       const todayStr = new Date().toISOString().slice(0, 10);
 
-      const filtered = studentsList.filter(s => s.name.toLowerCase().includes(q));
+      const filtered = studentsList.filter(s => {
+        const className = s.classes ? `${s.classes.grade} - ${s.classes.name}` : '';
+        return s.name.toLowerCase().includes(q) || className.toLowerCase().includes(q);
+      });
+
       container.innerHTML = filtered.map(s => {
         const todayPasses = passesList.filter(p => p.student_id === s.id && p.time_out.startsWith(todayStr)).length;
         const note = todayPasses > 0 ? ` [خرج اليوم ${todayPasses} مرات]` : '';
+        const classLabel = s.classes ? ` (${s.classes.grade} - ${s.classes.name})` : '';
+
         return `
-          <div onclick="selectStudent('${s.id}', '${s.name}')" class="px-4 py-3 hover:bg-brand-50 hover:text-brand-700 rounded-xl font-bold text-xs md:text-sm cursor-pointer transition flex items-center justify-between">
-            <span>${s.name}</span>
+          <div onclick="selectStudent('${s.id}', '${s.name}${classLabel}')" class="px-4 py-3 hover:bg-brand-50 hover:text-brand-700 rounded-xl font-bold text-xs md:text-sm cursor-pointer transition flex items-center justify-between">
+            <div>
+              <span>${s.name}</span>
+              <span class="text-xs text-slate-400 mr-1.5 font-normal">${classLabel}</span>
+            </div>
             <span class="text-xs text-brand-600 font-semibold">${note}</span>
           </div>
         `;
@@ -623,6 +707,7 @@
       db.channel('public-sync')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'passes' }, () => loadData())
         .on('postgres_changes', { event: '*', schema: 'public', table: 'students' }, () => loadData())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'classes' }, () => loadData())
         .on('postgres_changes', { event: '*', schema: 'public', table: 'teachers' }, () => loadTeachers())
         .subscribe();
     }
@@ -634,13 +719,21 @@
     }
 
     async function loadData() {
-      const { data: students } = await db.from("students").select("*").order("name");
-      studentsList = students || [];
-      renderCustomStudentOptions();
+      // جلب الشُعب
+      const { data: classes } = await db.from("classes").select("*").order("name");
+      classesList = classes || [];
+      renderClassesManager();
+      renderClassesSelectOptions();
 
+      // جلب الطلاب مع شُعبهم
+      const { data: students } = await db.from("students").select("*, classes(name, grade)").order("name");
+      studentsList = students || [];
+      filterStudentDropdown('');
+
+      // جلب الاستئذانات
       const { data: passes } = await db
         .from("passes")
-        .select("*, students(name)")
+        .select("*, students(name, classes(name, grade))")
         .order("time_out", { ascending: false });
       passesList = passes || [];
 
@@ -649,10 +742,6 @@
       checkCapacityLimit();
       renderHistoryTable();
       renderStudentsManager();
-    }
-
-    function renderCustomStudentOptions() {
-      filterStudentDropdown('');
     }
 
     function checkCapacityLimit() {
@@ -706,10 +795,14 @@
         `;
       } else {
         activeContainer.innerHTML = activePasses.map(p => {
+          const classInfo = p.students?.classes ? ` (${p.students.classes.grade} - ${p.students.classes.name})` : '';
           return `
             <div id="card-${p.id}" class="bg-white p-4 md:p-5 rounded-2xl md:rounded-3xl border-2 border-brand-200 shadow-sm flex items-center justify-between transition duration-200 hover:shadow-md animate-fade-up">
               <div class="space-y-1">
-                <div class="font-extrabold text-slate-900 text-base md:text-lg">${p.students?.name || 'طالب'}</div>
+                <div class="font-extrabold text-slate-900 text-base md:text-lg">
+                  ${p.students?.name || 'طالب'}
+                  <span class="text-xs text-brand-600 font-semibold">${classInfo}</span>
+                </div>
                 <div class="text-xs md:text-sm text-slate-500 font-medium">الوجهة: <span class="font-bold text-slate-700">${p.reason}</span></div>
                 <div class="text-xs md:text-sm font-bold text-brand-700" id="timer-${p.id}" data-timeout="${p.time_out}">
                   جارٍ التحديث...
@@ -757,9 +850,12 @@
 
       container.innerHTML = filtered.slice(0, 30).map(p => {
         const timeFormatted = new Date(p.time_out).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' });
+        const classLabel = p.students?.classes ? `${p.students.classes.grade} - ${p.students.classes.name}` : '-';
+
         return `
           <tr class="hover:bg-slate-50/80 transition duration-150">
             <td class="py-3.5 px-4 md:py-4 md:px-6 font-extrabold text-slate-900">${p.students?.name || 'مجهول'}</td>
+            <td class="py-3.5 px-4 md:py-4 md:px-6 text-slate-600 font-semibold">${classLabel}</td>
             <td class="py-3.5 px-4 md:py-4 md:px-6 text-slate-600 font-semibold">${p.reason}</td>
             <td class="py-3.5 px-4 md:py-4 md:px-6 text-slate-500 font-mono text-xs">${timeFormatted}</td>
             <td class="py-3.5 px-4 md:py-4 md:px-6 text-slate-800 font-bold">${p.duration_minutes ? p.duration_minutes + ' دقيقة' : 'خارج الفصل'}</td>
@@ -773,7 +869,77 @@
       }).join('');
     }
 
-    // إدارة الطلاب
+    // === إدارة الصفوف والشعب ===
+    function switchGradeFilter(grade) {
+      currentSelectedGrade = grade;
+      document.getElementById('current-grade-display').innerText = grade;
+      document.getElementById('new-class-grade').value = grade;
+
+      [1, 2, 3].forEach(i => {
+        const gName = i === 1 ? 'أول ثانوي' : i === 2 ? 'ثاني ثانوي' : 'ثالث ثانوي';
+        const tab = document.getElementById(`grade-tab-${i}`);
+        if (gName === grade) {
+          tab.className = "flex-1 py-3 rounded-xl font-extrabold text-xs md:text-sm bg-white text-brand-700 shadow-sm transition";
+        } else {
+          tab.className = "flex-1 py-3 rounded-xl font-extrabold text-xs md:text-sm text-slate-600 hover:text-slate-900 transition";
+        }
+      });
+
+      renderClassesManager();
+    }
+
+    function renderClassesManager() {
+      const grid = document.getElementById("classes-grid-list");
+      if (!grid) return;
+
+      const filtered = classesList.filter(c => (c.grade || 'أول ثانوي') === currentSelectedGrade);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-2 text-center py-10 text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-sm">لم يتم إنشاء أي شعبة لـ ${currentSelectedGrade} بعد</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(c => {
+        const studentsCount = studentsList.filter(s => s.class_id === c.id).length;
+        return `
+          <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex items-center justify-between">
+            <div>
+              <div class="font-extrabold text-slate-900 text-base">${c.name}</div>
+              <div class="text-xs text-brand-600 font-bold mt-0.5">${studentsCount} طلاب مسجلين</div>
+            </div>
+            <button onclick="deleteClass('${c.id}')" class="text-rose-600 hover:text-rose-700 font-bold text-xs p-2 rounded-xl hover:bg-rose-50 transition active:scale-95">
+              حذف
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function handleAddClass(e) {
+      e.preventDefault();
+      const name = document.getElementById("new-class-name").value.trim();
+      const grade = currentSelectedGrade;
+
+      await db.from("classes").insert([{ name: name, grade: grade }]);
+      document.getElementById("new-class-name").value = "";
+      loadData();
+    }
+
+    async function deleteClass(id) {
+      if (!confirm("هل أنت متأكد من حذف هذه الشعبة؟ سيتم إزالة ربط الطلاب بها.")) return;
+      await db.from("classes").delete().eq("id", id);
+      loadData();
+    }
+
+    function renderClassesSelectOptions() {
+      const select = document.getElementById("new-student-class");
+      if (!select) return;
+
+      select.innerHTML = '<option value="">-- اختر الشُعبة --</option>' +
+        classesList.map(c => `<option value="${c.id}">${c.grade || 'ثانوي'} - ${c.name}</option>`).join('');
+    }
+
+    // === إدارة الطلاب ===
     function renderStudentsManager() {
       const badge = document.getElementById("students-count-badge");
       if (badge) badge.innerText = studentsList.length;
@@ -781,17 +947,21 @@
       const grid = document.getElementById("students-grid-list");
       if (!grid) return;
 
-      grid.innerHTML = studentsList.map(s => `
-        <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex items-center justify-between">
-          <div>
-            <div class="font-extrabold text-slate-900 text-sm md:text-base">${s.name}</div>
-            <div class="text-xs md:text-sm text-slate-400 font-mono">${s.student_number || 'بدون رقم'}</div>
+      grid.innerHTML = studentsList.map(s => {
+        const classLabel = s.classes ? `${s.classes.grade} - ${s.classes.name}` : 'غير محدد';
+        return `
+          <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex items-center justify-between">
+            <div>
+              <div class="font-extrabold text-slate-900 text-sm md:text-base">${s.name}</div>
+              <div class="text-xs text-brand-700 font-bold mt-0.5">${classLabel}</div>
+              <div class="text-[11px] text-slate-400 font-mono">${s.student_number || 'بدون رقم'}</div>
+            </div>
+            <button onclick="deleteStudent('${s.id}')" class="text-rose-600 hover:text-rose-700 font-bold text-xs md:text-sm p-2 rounded-xl hover:bg-rose-50 transition active:scale-95">
+              حذف
+            </button>
           </div>
-          <button onclick="deleteStudent('${s.id}')" class="text-rose-600 hover:text-rose-700 font-bold text-xs md:text-sm p-2 rounded-xl hover:bg-rose-50 transition active:scale-95">
-            حذف
-          </button>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     async function deleteStudent(id) {
@@ -800,7 +970,19 @@
       loadData();
     }
 
-    // إدارة المعلمين (بخطوط كبيرة وواضحة جداً)
+    async function handleAddStudent(e) {
+      e.preventDefault();
+      const name = document.getElementById("new-student-name").value.trim();
+      const classId = document.getElementById("new-student-class").value;
+      const num = document.getElementById("new-student-number").value.trim();
+
+      await db.from("students").insert([{ name: name, class_id: classId || null, student_number: num }]);
+      document.getElementById("new-student-name").value = "";
+      document.getElementById("new-student-number").value = "";
+      loadData();
+    }
+
+    // === إدارة المعلمين ===
     async function loadTeachers() {
       const { data } = await db.from("teachers").select("*").order("created_at", { ascending: false });
       teachersList = data || [];
@@ -888,26 +1070,19 @@
       loadData();
     }
 
-    async function handleAddStudent(e) {
-      e.preventDefault();
-      const name = document.getElementById("new-student-name").value.trim();
-      const num = document.getElementById("new-student-number").value.trim();
-
-      await db.from("students").insert([{ name: name, student_number: num }]);
-      document.getElementById("new-student-name").value = "";
-      document.getElementById("new-student-number").value = "";
-      loadData();
-    }
-
     function exportCSV() {
-      const headers = ["اسم الطالب", "السبب", "وقت الخروج", "المدة بالدقائق", "الحالة"];
-      const rows = passesList.map(p => [
-        `"${p.students?.name || ''}"`,
-        `"${p.reason}"`,
-        `"${new Date(p.time_out).toLocaleString("ar-SA")}"`,
-        p.duration_minutes || "جارٍ",
-        p.status === "active" ? "بالخارج" : "عاد"
-      ]);
+      const headers = ["اسم الطالب", "الصف والشعبة", "السبب", "وقت الخروج", "المدة بالدقائق", "الحالة"];
+      const rows = passesList.map(p => {
+        const classLabel = p.students?.classes ? `${p.students.classes.grade} - ${p.students.classes.name}` : '-';
+        return [
+          `"${p.students?.name || ''}"`,
+          `"${classLabel}"`,
+          `"${p.reason}"`,
+          `"${new Date(p.time_out).toLocaleString("ar-SA")}"`,
+          p.duration_minutes || "جارٍ",
+          p.status === "active" ? "بالخارج" : "عاد"
+        ];
+      });
       const csv = "data:text/csv;charset=utf-8,\uFEFF" + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
       const link = document.createElement("a");
       link.href = encodeURI(csv);
