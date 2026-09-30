@@ -12,6 +12,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- مكتبة مسح الباركود بالكاميرا -->
   <script src="https://unpkg.com/html5-qrcode"></script>
+  <!-- مكتبة توليد رموز QR الثابتة للطباعة -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <!-- خط IBM Plex Sans Arabic -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -69,18 +71,20 @@
     .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
     .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     @media print {
-      body * { visibility: hidden; }
-      #printable-report, #printable-report * { visibility: visible; }
+      body * { visibility: hidden !important; }
+      #printable-report, #printable-report * { visibility: visible !important; }
       #printable-report { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
+      #printable-barcodes, #printable-barcodes * { visibility: visible !important; }
+      #printable-barcodes { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
     }
   </style>
 </head>
 <body class="text-slate-800 antialiased selection:bg-brand-600 selection:text-white min-h-screen flex flex-col md:flex-row relative">
 
-  <!-- ================= حاوية الإشعارات المخصصة (Toast Notifications) ================= -->
+  <!-- ================= حاوية الإشعارات المخصصة (Toast) ================= -->
   <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none w-full max-w-sm px-4"></div>
 
-  <!-- ================= نافذة التأكيد المخصصة (Confirmation Modal) ================= -->
+  <!-- ================= نافذة التأكيد المخصصة (Confirm Modal) ================= -->
   <div id="confirm-modal" class="hidden fixed inset-0 z-[90] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
     <div class="bg-white max-w-sm w-full p-6 rounded-3xl border border-slate-200 shadow-2xl space-y-4 animate-fade-up text-center">
       <div id="confirm-icon" class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold">
@@ -261,7 +265,7 @@
               📥 Excel
             </button>
             <button onclick="printOfficialReport()" class="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-4 py-3 rounded-2xl text-xs md:text-sm font-bold shadow-sm transition active:scale-95">
-              🖨️ طباعة PDF رسمي
+              🖨️ طباعة تقرير ورقي
             </button>
           </div>
         </div>
@@ -468,17 +472,20 @@
         </div>
       </div>
 
-      <!-- ================= تبويب 4: إدارة الطلاب مع استيراد Excel ================= -->
+      <!-- ================= تبويب 4: إدارة الطلاب مع زر طباعة الباركود ================= -->
       <div id="tab-students" class="hidden space-y-6 md:space-y-8 animate-fade-up">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">إدارة طلاب الفصل</h2>
-            <p class="text-sm md:text-base text-slate-500 mt-1">أضف طلاب جدد أو استورد قائمة الفصل كاملة بملف Excel</p>
+            <p class="text-sm md:text-base text-slate-500 mt-1">أضف الطلاب أو اطبع بطاقات الباركود الثابتة للجميع</p>
           </div>
-          <div>
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <button onclick="printStudentBarcodes()" class="bg-brand-700 hover:bg-brand-800 text-white font-extrabold text-xs md:text-sm px-4 py-3 rounded-2xl shadow-md shadow-brand-700/20 transition active:scale-95 flex items-center gap-2">
+              🖨️️ طباعة بطاقات الباركود (PDF)
+            </button>
             <input type="file" id="csv-file-input" accept=".csv, .txt" class="hidden" onchange="handleCSVImport(event)">
             <button onclick="document.getElementById('csv-file-input').click()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs md:text-sm px-4 py-3 rounded-2xl shadow-sm transition active:scale-95 flex items-center gap-2">
-              📥 استيراد طلاب من ملف CSV / Excel
+              📥 استيراد CSV
             </button>
           </div>
         </div>
@@ -506,7 +513,7 @@
 
               <div>
                 <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">الرقم الأكاديمي / الباركود</label>
-                <input type="text" id="new-student-number" placeholder="اختياري" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs md:text-sm font-semibold outline-none focus:border-brand-600">
+                <input type="text" id="new-student-number" placeholder="اختياري (أو سيُولد تلقائياً)" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs md:text-sm font-semibold outline-none focus:border-brand-600">
               </div>
 
               <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-bold py-3.5 rounded-2xl text-xs md:text-sm transition active:scale-95 cursor-pointer">
@@ -629,29 +636,66 @@
     </div>
   </div>
 
-  <!-- ================= نافذة وضع كشك الطالب الذاتي (Kiosk Mode Fullscreen) ================= -->
-  <div id="kiosk-mode-view" class="hidden fixed inset-0 z-50 bg-slate-900 text-white flex flex-col items-center justify-center p-6 text-center space-y-8 animate-fade-up">
-    <button onclick="toggleKioskMode(false)" class="absolute top-6 left-6 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold">
+  <!-- ================= نافذة وضع كشك الطالب الذاتي مع كاميرا مدمجة ================= -->
+  <div id="kiosk-mode-view" class="hidden fixed inset-0 z-50 bg-slate-900 text-white flex flex-col items-center justify-center p-4 md:p-6 text-center space-y-6 animate-fade-up overflow-y-auto">
+    <button onclick="toggleKioskMode(false)" class="absolute top-6 left-6 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition">
       ✕ الخروج من وضع الكشك
     </button>
 
-    <div class="w-24 h-24 bg-brand-700 rounded-3xl flex items-center justify-center mx-auto shadow-2xl text-4xl">
+    <div class="w-20 h-20 bg-brand-700 rounded-3xl flex items-center justify-center mx-auto shadow-2xl text-3xl">
       📋
     </div>
 
-    <div class="space-y-2 max-w-md">
-      <h1 class="text-3xl md:text-4xl font-extrabold">كشك الاستئذان الذاتي</h1>
-      <p class="text-slate-400 text-sm">أدخل رقمك الأكاديمي أو امسح بطاقتك للخروج أو تأكيد العودة للفصل</p>
+    <div class="space-y-1 max-w-md">
+      <h1 class="text-2xl md:text-3xl font-extrabold">كشك الاستئذان الذاتي</h1>
+      <p class="text-slate-400 text-xs md:text-sm">امسح بطاقتك بالكاميرا أو أدخل رقمك الأكاديمي</p>
     </div>
 
-    <div class="w-full max-w-sm space-y-4">
-      <input type="text" id="kiosk-student-input" placeholder="أدخل الرقم الأكاديمي..." class="w-full bg-slate-800 border-2 border-slate-700 focus:border-brand-500 rounded-2xl p-4 text-center text-xl font-bold tracking-widest outline-none">
-      <div class="grid grid-cols-2 gap-3">
-        <button onclick="processKioskAction('دورة المياه')" class="p-4 bg-brand-600 hover:bg-brand-500 rounded-2xl font-bold text-sm">خروج (دورة مياه)</button>
-        <button onclick="processKioskAction('شرب ماء')" class="p-4 bg-blue-600 hover:bg-blue-500 rounded-2xl font-bold text-sm">خروج (شرب ماء)</button>
+    <!-- نافذة كاميرا الكشك المباشرة -->
+    <div id="kiosk-camera-box" class="hidden w-full max-w-sm rounded-3xl overflow-hidden border-2 border-brand-500 shadow-2xl bg-black">
+      <div id="kiosk-qr-reader" class="w-full"></div>
+      <button onclick="closeKioskCamera()" class="w-full py-2 bg-slate-800 text-xs font-bold text-slate-300">إغلاق الكاميرا</button>
+    </div>
+
+    <!-- بطاقة الطالب المكتشف بعد المسح -->
+    <div id="kiosk-student-card" class="hidden w-full max-w-sm bg-slate-800 border-2 border-brand-500/70 p-5 rounded-3xl space-y-3 animate-fade-up text-right">
+      <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+        <span class="text-xs text-brand-400 font-bold">تم التعرف على الطالب ✓</span>
+        <button onclick="resetKioskCard()" class="text-xs text-slate-400 font-bold">إلغاء</button>
       </div>
-      <button onclick="processKioskReturn()" class="w-full p-4 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-extrabold text-base shadow-lg">
-        تسجيل عودة للفصل ✓
+      <div>
+        <div id="kiosk-detected-name" class="font-extrabold text-lg text-white">...</div>
+        <div id="kiosk-detected-class" class="text-xs text-slate-300 font-semibold">...</div>
+      </div>
+      <div class="pt-2 space-y-2">
+        <div class="text-xs font-bold text-slate-400">اختر وجهة الخروج:</div>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="confirmKioskPass('دورة المياه')" class="p-3 bg-brand-700 hover:bg-brand-600 rounded-xl text-xs font-bold transition">🚽 دورة مياه</button>
+          <button onclick="confirmKioskPass('شرب ماء')" class="p-3 bg-blue-600 hover:bg-blue-500 rounded-xl text-xs font-bold transition">💧 شرب ماء</button>
+          <button onclick="confirmKioskPass('المرشد الطلابي')" class="p-3 bg-emerald-600 hover:bg-emerald-500 rounded-xl text-xs font-bold transition">🤝 المرشد</button>
+          <button onclick="confirmKioskPass('أخرى')" class="p-3 bg-slate-700 hover:bg-slate-600 rounded-xl text-xs font-bold transition">أخرى</button>
+        </div>
+        <button onclick="confirmKioskReturn()" class="w-full py-3 bg-teal-600 hover:bg-teal-500 rounded-xl font-extrabold text-sm transition">
+          تسجيل عودة للفصل ✓
+        </button>
+      </div>
+    </div>
+
+    <!-- واجهة الإدخال العادية -->
+    <div id="kiosk-default-controls" class="w-full max-w-sm space-y-4">
+      <button onclick="openKioskCamera()" class="w-full flex items-center justify-center gap-2 py-4 bg-brand-700 hover:bg-brand-600 text-white rounded-2xl font-extrabold text-sm md:text-base shadow-lg shadow-brand-700/25 transition active:scale-95 cursor-pointer">
+        📷 اضغط لمسح بطاقتك بالكاميرا
+      </button>
+
+      <div class="relative flex items-center justify-center">
+        <div class="border-t border-slate-700 w-full"></div>
+        <span class="bg-slate-900 px-3 text-xs text-slate-500 font-bold absolute">أو أدخل رقمك</span>
+      </div>
+
+      <input type="text" id="kiosk-student-input" onkeyup="if(event.key === 'Enter') handleManualKioskLookup()" placeholder="أدخل الرقم الأكاديمي واضغط Enter..." class="w-full bg-slate-800 border-2 border-slate-700 focus:border-brand-500 rounded-2xl p-4 text-center text-sm md:text-base font-bold tracking-widest outline-none">
+      
+      <button onclick="handleManualKioskLookup()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 rounded-2xl font-bold text-xs">
+        بحث يدوي عن الطالب
       </button>
     </div>
   </div>
@@ -731,7 +775,16 @@
     </div>
   </div>
 
-  <!-- ================= قسم التقرير الرسمي المعد للطباعة فقط ================= -->
+  <!-- ================= قسم كروت الباركود المجهزة للطباعة فقط (Printable Barcodes) ================= -->
+  <div id="printable-barcodes" class="hidden p-6 bg-white text-slate-900">
+    <div class="text-center pb-4 mb-6 border-b-2 border-slate-800">
+      <h1 class="text-xl font-extrabold">بطاقات باركود الطلاب المعتمدة للاستئذان الذكي</h1>
+      <p class="text-xs text-slate-500 mt-1">تُقص البطاقات وتُوزع على الطلاب أو تُلصق في دفاترهم المدرسية</p>
+    </div>
+    <div id="barcodes-print-grid" class="grid grid-cols-3 gap-6"></div>
+  </div>
+
+  <!-- ================= قسم التقرير الرسمي للطباعة ================= -->
   <div id="printable-report" class="hidden p-8 bg-white text-slate-900">
     <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-center">
       <div>
@@ -780,10 +833,12 @@
     let maxAllowedDuration = parseInt(localStorage.getItem('pass_max_dur') || '5');
 
     let html5QrScanner = null;
+    let kioskQrScanner = null;
     let reasonsChart = null;
     let hoursChart = null;
+    let kioskSelectedStudent = null;
 
-    // === نظام الإشعارات المنبثقة المخصص (Custom Toast Notification) ===
+    // إشعار Toast
     function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
@@ -817,7 +872,7 @@
       }, 3200);
     }
 
-    // === نافذة التأكيد المخصصة (Custom Confirm Modal) ===
+    // نافذة تأكيد مخصصة
     function showConfirmModal(title, message, onConfirm, icon = '⚠️') {
       const modal = document.getElementById('confirm-modal');
       document.getElementById('confirm-title').innerText = title;
@@ -848,12 +903,23 @@
       document.getElementById('current-duration-display').innerText = `${maxAllowedDuration} دقائق`;
       applySettingButtonStyles();
 
+      // التحقق مما إذا كان الرابط مفتوحاً عبر مسح الباركود بجوال عادي (مثال: ?student=xxx)
+      const urlParams = new URLSearchParams(window.location.search);
+      const studentParam = urlParams.get('student');
+
       const { data: { session } } = await db.auth.getSession();
       if (session?.user) {
         currentUser = session.user;
         verifyTeacherAndLoad();
       } else {
-        showView("login-view");
+        if (studentParam) {
+          // إذا فتح الطالب الرابط من جواله دون تسجيل دخول، نقله لوضع الكشك الخاص بالطالب
+          toggleKioskMode(true);
+          document.getElementById('kiosk-student-input').value = studentParam;
+          handleManualKioskLookup();
+        } else {
+          showView("login-view");
+        }
       }
 
       setInterval(updateLiveTimers, 1000);
@@ -1307,7 +1373,7 @@
         reason: reason,
         time_out: new Date().toISOString(),
         status: "active",
-        created_by: currentUser.id
+        created_by: currentUser ? currentUser.id : null
       }]);
 
       document.getElementById("custom-student-value").value = "";
@@ -1335,7 +1401,7 @@
       loadData();
     }
 
-    // === ماسح الباركود بالكاميرا ===
+    // === ماسح الباركود العام بالكاميرا ===
     function openScannerModal() {
       document.getElementById("scanner-modal").classList.remove("hidden");
       html5QrScanner = new Html5Qrcode("qr-reader");
@@ -1358,7 +1424,15 @@
 
     async function onScanSuccess(decodedText) {
       closeScannerModal();
-      const code = decodedText.trim();
+      let code = decodedText.trim();
+      
+      // إذا كان الرابط كاملاً، استخراج قيمة student
+      if (code.includes('student=')) {
+        try {
+          const url = new URL(code);
+          code = url.searchParams.get('student') || code;
+        } catch(e) {}
+      }
 
       const student = studentsList.find(s => s.student_number === code || s.id === code);
       if (!student) {
@@ -1374,45 +1448,147 @@
       }
     }
 
-    // === وضع الكشك الذاتي ===
+    // === كاميرا الكشك المباشرة والتفاعل مع الطالب ===
     function toggleKioskMode(show) {
       document.getElementById("kiosk-mode-view").classList.toggle("hidden", !show);
       if (show) {
+        resetKioskCard();
         document.getElementById("kiosk-student-input").value = "";
-        document.getElementById("kiosk-student-input").focus();
+      } else {
+        closeKioskCamera();
       }
     }
 
-    async function processKioskAction(reason) {
+    function openKioskCamera() {
+      document.getElementById("kiosk-camera-box").classList.remove("hidden");
+      document.getElementById("kiosk-default-controls").classList.add("hidden");
+      
+      kioskQrScanner = new Html5Qrcode("kiosk-qr-reader");
+      kioskQrScanner.start(
+        { facingMode: "user" }, // كاميرا أمامية للألواح واللابتوبات أو بيئة
+        { fps: 10, qrbox: { width: 220, height: 220 } },
+        (decodedText) => {
+          closeKioskCamera();
+          let code = decodedText.trim();
+          if (code.includes('student=')) {
+            try {
+              const url = new URL(code);
+              code = url.searchParams.get('student') || code;
+            } catch(e) {}
+          }
+          handleKioskStudentFound(code);
+        }
+      ).catch(err => {
+        showToast("تعذر تشغيل كاميرا الكشك: " + err, "error");
+        closeKioskCamera();
+      });
+    }
+
+    function closeKioskCamera() {
+      if (kioskQrScanner) {
+        kioskQrScanner.stop().then(() => kioskQrScanner.clear()).catch(console.error);
+        kioskQrScanner = null;
+      }
+      document.getElementById("kiosk-camera-box").classList.add("hidden");
+      document.getElementById("kiosk-default-controls").classList.remove("hidden");
+    }
+
+    function handleManualKioskLookup() {
       const code = document.getElementById("kiosk-student-input").value.trim();
-      const student = studentsList.find(s => s.student_number === code || s.name === code);
-      if (!student) {
-        showToast("الرقم الأكاديمي غير مسجل!", "error");
+      if (!code) {
+        showToast("الرجاء إدخال رقمك الأكاديمي!", "warning");
         return;
       }
-      await executeGrantPass(student.id, reason);
-      showToast(`تم تسجيل الإذن للطالب: ${student.name}`, "success");
+      handleKioskStudentFound(code);
+    }
+
+    function handleKioskStudentFound(code) {
+      const student = studentsList.find(s => s.student_number === code || s.id === code || s.name === code);
+      if (!student) {
+        showToast("عذراً، لم يتم العثور على طالب بهذا الرقم!", "error");
+        return;
+      }
+
+      kioskSelectedStudent = student;
+      document.getElementById("kiosk-detected-name").innerText = student.name;
+      document.getElementById("kiosk-detected-class").innerText = student.classes ? `${student.classes.grade} - ${student.classes.name}` : 'غير محدد';
+      
+      document.getElementById("kiosk-student-card").classList.remove("hidden");
+      document.getElementById("kiosk-default-controls").classList.add("hidden");
+      playChime();
+    }
+
+    function resetKioskCard() {
+      kioskSelectedStudent = null;
+      document.getElementById("kiosk-student-card").classList.add("hidden");
+      document.getElementById("kiosk-default-controls").classList.remove("hidden");
       document.getElementById("kiosk-student-input").value = "";
     }
 
-    async function processKioskReturn() {
-      const code = document.getElementById("kiosk-student-input").value.trim();
-      const student = studentsList.find(s => s.student_number === code || s.name === code);
-      if (!student) {
-        showToast("الرقم الأكاديمي غير مسجل!", "error");
-        return;
-      }
-      const activePass = passesList.find(p => p.student_id === student.id && p.status === 'active');
+    async function confirmKioskPass(reason) {
+      if (!kioskSelectedStudent) return;
+      await executeGrantPass(kioskSelectedStudent.id, reason);
+      showToast(`تم تسجيل خروج الطالب (${kioskSelectedStudent.name}) إلى ${reason}`, "success");
+      resetKioskCard();
+    }
+
+    async function confirmKioskReturn() {
+      if (!kioskSelectedStudent) return;
+      const activePass = passesList.find(p => p.student_id === kioskSelectedStudent.id && p.status === 'active');
       if (!activePass) {
-        showToast("هذا الطالب ليس مسجلاً كخارج الفصل!", "warning");
+        showToast("أنت لست مسجلاً كخارج الفصل حالياً!", "warning");
         return;
       }
       await returnStudent(activePass.id, activePass.time_out);
-      showToast(`حمداً لله على سلامتك يا ${student.name}، تم تسجيل عودتك!`, "success");
-      document.getElementById("kiosk-student-input").value = "";
+      showToast(`أهلاً بعودتك يا ${kioskSelectedStudent.name}، تم تسجيل عودتك!`, "success");
+      resetKioskCard();
     }
 
-    // === استيراد الطلاب بملف CSV ===
+    // === طباعة بطاقات الباركود الثابتة لجميع الطلاب ===
+    function printStudentBarcodes() {
+      const printGrid = document.getElementById("barcodes-print-grid");
+      printGrid.innerHTML = "";
+
+      if (studentsList.length === 0) {
+        showToast("لا يوجد طلاب مسجلون لطباعة باركوداتهم!", "warning");
+        return;
+      }
+
+      showToast("جارٍ تجهيز البطاقات للطباعة...", "info");
+
+      studentsList.forEach((s, idx) => {
+        const studentCode = s.student_number || s.id;
+        // رابط ذكي للمسح بأي جوال عادي
+        const qrContent = `${window.location.origin}${window.location.pathname}?student=${encodeURIComponent(studentCode)}`;
+        const cardId = `qr-card-${idx}`;
+
+        const cardHtml = `
+          <div class="border-2 border-slate-300 p-4 rounded-2xl flex flex-col items-center justify-between text-center space-y-2 bg-white break-inside-avoid">
+            <div class="font-extrabold text-sm text-slate-900">${s.name}</div>
+            <div class="text-[11px] text-slate-500 font-semibold">${s.classes ? `${s.classes.grade} -${s.classes.name}` : 'غير محدد'}</div>
+            <div id="${cardId}" class="p-2 border border-slate-200 rounded-xl bg-white flex items-center justify-center"></div>
+            <div class="text-[10px] text-slate-400 font-mono">الرقم: ${studentCode}</div>
+          </div>
+        `;
+
+        printGrid.insertAdjacentHTML('beforeend', cardHtml);
+
+        new QRCode(document.getElementById(cardId), {
+          text: qrContent,
+          width: 110,
+          height: 110,
+          colorDark: "#1e1b4b",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      });
+
+      setTimeout(() => {
+        window.print();
+      }, 600);
+    }
+
+    // استيراد الطلاب بملف CSV
     function handleCSVImport(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -1427,7 +1603,7 @@
           const parts = line.split(/[,;\t]/).map(p => p.replace(/"/g, '').trim());
           if (parts.length > 0 && parts[0] && parts[0] !== 'اسم الطالب') {
             const name = parts[0];
-            const num = parts[1] || '';
+            const num = parts[1] || `S-${Math.floor(1000 + Math.random() * 9000)}`;
             await db.from('students').insert([{ name: name, student_number: num }]);
             addedCount++;
           }
@@ -1438,7 +1614,7 @@
       reader.readAsText(file);
     }
 
-    // === التحليلات والرسوم البيانية ===
+    // التحليلات والرسوم
     function renderAnalyticsCharts() {
       const reasonsCount = {};
       passesList.forEach(p => {
@@ -1517,7 +1693,7 @@
 
     function printOfficialReport() {
       document.getElementById('print-date').innerText = new Date().toLocaleDateString('ar-SA');
-      document.getElementById('print-teacher').innerText = currentUser.email;
+      document.getElementById('print-teacher').innerText = currentUser ? currentUser.email : 'المعلم';
 
       const printBody = document.getElementById('print-table-body');
       printBody.innerHTML = passesList.slice(0, 40).map(p => {
@@ -1565,7 +1741,7 @@
       }).join('');
     }
 
-    // === إدارة الصفوف والشعب ===
+    // الصفوف والشعب
     function switchGradeFilter(grade) {
       currentSelectedGrade = grade;
       document.getElementById('current-grade-display').innerText = grade;
@@ -1630,7 +1806,7 @@
       });
     }
 
-    // === إدارة وتعديل الطلاب ===
+    // إدارة الطلاب
     function renderStudentsManager() {
       const badge = document.getElementById("students-count-badge");
       if (badge) badge.innerText = studentsList.length;
@@ -1672,7 +1848,12 @@
       e.preventDefault();
       const name = document.getElementById("new-student-name").value.trim();
       const classId = document.getElementById("new-student-class-id").value;
-      const num = document.getElementById("new-student-number").value.trim();
+      let num = document.getElementById("new-student-number").value.trim();
+
+      // توليد رقم فريد تلقائي إذا لم يدخل المعلم رقماً
+      if (!num) {
+        num = `S-${Math.floor(10000 + Math.random() * 90000)}`;
+      }
 
       await db.from("students").insert([{ name: name, class_id: classId || null, student_number: num }]);
       document.getElementById("new-student-name").value = "";
@@ -1680,7 +1861,7 @@
       document.getElementById("new-student-class-id").value = "";
       document.getElementById("new-student-class-label").innerText = "-- اختر الشُعبة --";
       document.getElementById("new-student-class-label").classList.add("text-slate-400");
-      showToast("تم حفظ الطالب في القائمة بنجاح", "success");
+      showToast("تم حفظ الطالب بنجاح", "success");
       loadData();
     }
 
@@ -1721,7 +1902,7 @@
       loadData();
     }
 
-    // === إدارة وتعديل المعلمين ===
+    // إدارة المعلمين
     async function loadTeachers() {
       const { data } = await db.from("teachers").select("*").order("created_at", { ascending: false });
       teachersList = data || [];
