@@ -3,131 +3,264 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>منصة استئذان الطلاب | PassManager</title>
-  <!-- Tailwind CSS للواجهة والألوان -->
+  <title>منصة استئذان الطلاب | PassManager Pro</title>
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- مكتبة Supabase JS الرسمية للواجهات الثابتة -->
+  <!-- Supabase JS Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- خط تجوال العربي -->
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <!-- Google Fonts: IBM Plex Sans Arabic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"IBM Plex Sans Arabic"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              950: '#090514',
+              900: '#130c24',
+              850: '#1b1133',
+              800: '#251745',
+              700: '#3d256e',
+              600: '#5b32a3',
+              500: '#7c3aed',
+              400: '#a78bfa',
+              300: '#c4b5fd',
+              200: '#ddd6fe',
+              100: '#ede9fe',
+            }
+          },
+          keyframes: {
+            pulseGlow: {
+              '0%, 100%': { boxShadow: '0 0 15px rgba(239, 68, 68, 0.4)' },
+              '50%': { boxShadow: '0 0 25px rgba(239, 68, 68, 0.8)' },
+            },
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(8px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          },
+          animation: {
+            'pulse-glow': 'pulseGlow 2s infinite',
+            'fade-in': 'fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    body { font-family: 'Tajawal', sans-serif; }
+    body {
+      background: radial-gradient(circle at 50% 0%, #1e1138 0%, #0d0818 100%);
+      color: #f1f0f7;
+      min-height: 100vh;
+    }
+    .glass-card {
+      background: rgba(25, 16, 46, 0.7);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(139, 92, 246, 0.15);
+    }
+    .glass-card-hover {
+      transition: all 0.25s ease;
+    }
+    .glass-card-hover:hover {
+      transform: translateY(-2px);
+      border-color: rgba(167, 139, 250, 0.35);
+      box-shadow: 0 12px 30px -10px rgba(124, 58, 237, 0.3);
+    }
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0d0818; }
+    ::-webkit-scrollbar-thumb { background: #3d256e; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #7c3aed; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen">
+<body class="font-sans antialiased selection:bg-brand-500 selection:text-white">
 
-  <!-- 1. شاشة تسجيل الدخول -->
-  <div id="login-view" class="flex h-screen items-center justify-center p-4">
-    <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-100 max-w-md w-full text-center space-y-6">
-      <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">
-        📋
+  <!-- ================= 1. شاشة تسجيل الدخول ================= -->
+  <div id="login-view" class="flex min-h-screen items-center justify-center p-4">
+    <div class="glass-card p-8 md:p-10 rounded-3xl max-w-md w-full text-center space-y-7 shadow-2xl relative overflow-hidden border border-brand-700/40 animate-fade-in">
+      <div class="absolute -top-24 -left-24 w-48 h-48 bg-brand-500/20 rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-fuchsia-500/20 rounded-full blur-3xl"></div>
+
+      <div class="relative w-20 h-20 bg-gradient-to-tr from-brand-600 to-fuchsia-500 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-brand-500/30">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
       </div>
-      <div>
-        <h1 class="text-2xl font-black text-slate-800">منصة استئذان الطلاب</h1>
-        <p class="text-sm text-slate-500 mt-2">سجّل دخولك بحساب المعلم المعتمد لمتابعة الطلاب</p>
+
+      <div class="space-y-2">
+        <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">منصة استئذان الطلاب</h1>
+        <p class="text-sm text-brand-300/80 leading-relaxed">نظام إدارة ومتابعة خروج الطلاب خلال الحصص الدراسية بإحصائيات دقيقة ومزامنة لحظية</p>
       </div>
-      <button onclick="loginWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition shadow-md">
-        <span>تسجيل الدخول عبر Google</span>
+
+      <button onclick="loginWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-600 hover:to-indigo-700 text-white font-semibold py-3.5 px-6 rounded-2xl transition duration-200 shadow-lg shadow-brand-500/25 active:scale-95 cursor-pointer">
+        <svg class="w-5 h-5" viewBox="0 0 24 24">
+          <path fill="#fff" d="M12.24 10.285V13.4h6.887C18.2 16.27 15.64 18.4 12.24 18.4c-3.535 0-6.4-2.865-6.4-6.4s2.865-6.4 6.4-6.4c1.64 0 3.125.62 4.27 1.635l2.42-2.42C17.38 3.325 14.99 2.4 12.24 2.4 6.915 2.4 2.6 6.715 2.6 12.04s4.315 9.64 9.64 9.64c5.56 0 9.24-3.91 9.24-9.405 0-.64-.065-1.26-.185-1.995H12.24z"/>
+        </svg>
+        <span>الدخول بحساب Google المعتمد</span>
       </button>
+
+      <div class="text-xs text-brand-400/60 font-medium">مخصص للمعلمين والإدارة المدرسية المعتمدة</div>
     </div>
   </div>
 
-  <!-- 2. تنبيه الحساب غير المصرح له -->
-  <div id="unauthorized-view" class="hidden flex h-screen items-center justify-center p-4">
-    <div class="bg-white p-8 rounded-2xl shadow-lg border border-rose-100 max-w-md w-full text-center space-y-4">
-      <div class="text-4xl">⚠️</div>
-      <h2 class="text-xl font-bold text-slate-800">الحساب غير مصرح له</h2>
-      <p id="unauthorized-email" class="text-sm text-slate-500"></p>
-      <p class="text-xs text-rose-600 font-semibold">يجب أن يكون بريدك مضافاً مسبقاً في جدول teachers بقاعدة البيانات.</p>
-      <button onclick="logout()" class="text-blue-600 font-bold underline text-sm pt-2">تسجيل خروج أو تبديل الحساب</button>
-    </div>
-  </div>
-
-  <!-- 3. لوحة تحكم المعلم الرئيسية -->
-  <div id="app-view" class="hidden max-w-5xl mx-auto p-4 md:p-8 space-y-6">
-    <!-- الشريط العلوي -->
-    <header class="flex flex-wrap items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-      <div>
-        <h1 class="text-xl md:text-2xl font-black text-slate-800">لوحة استئذان الفصل</h1>
-        <p id="teacher-email-display" class="text-xs md:text-sm text-slate-500 mt-1"></p>
+  <!-- ================= 2. تنبيه الحساب غير المصرح له ================= -->
+  <div id="unauthorized-view" class="hidden flex min-h-screen items-center justify-center p-4">
+    <div class="glass-card p-8 rounded-3xl max-w-md w-full text-center space-y-5 border-rose-500/30 animate-fade-in">
+      <div class="w-16 h-16 bg-rose-500/10 text-rose-400 rounded-full flex items-center justify-center mx-auto text-2xl font-bold border border-rose-500/30">
+        ✕
       </div>
-      <div class="flex items-center gap-3">
-        <button onclick="exportCSV()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2">
-          📥 تصدير Excel (CSV)
+      <h2 class="text-2xl font-bold text-white">الحساب غير مصرح له</h2>
+      <p id="unauthorized-email" class="text-sm text-brand-300 font-mono bg-brand-900/60 py-2 px-3 rounded-lg border border-brand-700/50"></p>
+      <p class="text-xs text-rose-300/80 leading-relaxed">
+        هذا البريد الإلكتروني غير مضاف في قائمة المعلمين المعتمدين. تواصل مع المعلم المسؤول لمنحك الصلاحية.
+      </p>
+      <div class="pt-2">
+        <button onclick="logout()" class="px-5 py-2.5 rounded-xl bg-brand-800 hover:bg-brand-700 text-sm font-semibold transition border border-brand-600/40">
+          تسجيل الخروج أو التبديل لحساب آخر
         </button>
-        <button onclick="logout()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 3. لوحة تحكم المعلم ================= -->
+  <div id="app-view" class="hidden max-w-6xl mx-auto p-4 md:p-8 space-y-6 animate-fade-in">
+
+    <!-- شريط الرأس -->
+    <header class="glass-card p-5 md:p-6 rounded-3xl flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-fuchsia-600 flex items-center justify-center font-bold text-lg text-white shadow-md shadow-brand-500/30">
+          P
+        </div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-bold text-white tracking-wide">نظام استئذان الطلاب</h1>
+          <p id="teacher-email-display" class="text-xs text-brand-300/70 font-mono mt-0.5"></p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <button onclick="toggleTeacherModal()" class="glass-card hover:bg-brand-700/40 text-brand-200 px-4 py-2.5 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-2 border border-brand-500/30">
+          <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+          إدارة المعلمين
+        </button>
+        <button onclick="exportCSV()" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 px-4 py-2.5 rounded-xl text-xs md:text-sm font-medium transition flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          تصدير Excel (CSV)
+        </button>
+        <button onclick="logout()" class="glass-card hover:bg-rose-500/20 text-rose-300 border-rose-500/30 px-3.5 py-2.5 rounded-xl text-xs md:text-sm font-medium transition">
           خروج
         </button>
       </div>
     </header>
 
-    <!-- الطلاب بالخارج حالياً مع العداد -->
-    <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
-      <div class="flex items-center justify-between">
-        <h2 class="font-bold text-slate-800 flex items-center gap-2 text-lg">
-          ⏳ الطلاب خارج الفصل حالياً
-        </h2>
-        <span id="active-count-badge" class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-full">0 طالب</span>
+    <!-- شريط الإحصائيات السريعة -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="glass-card p-4 rounded-2xl border-l-4 border-l-brand-500">
+        <div class="text-xs text-brand-300/80 font-medium">الطلاب بالخارج الآن</div>
+        <div id="stat-active" class="text-2xl font-bold text-white mt-1">0</div>
       </div>
+      <div class="glass-card p-4 rounded-2xl border-l-4 border-l-emerald-500">
+        <div class="text-xs text-brand-300/80 font-medium">استئذانات اليوم</div>
+        <div id="stat-today" class="text-2xl font-bold text-white mt-1">0</div>
+      </div>
+      <div class="glass-card p-4 rounded-2xl border-l-4 border-l-amber-500">
+        <div class="text-xs text-brand-300/80 font-medium">الطلاب المسجلين</div>
+        <div id="stat-students" class="text-2xl font-bold text-white mt-1">0</div>
+      </div>
+      <div class="glass-card p-4 rounded-2xl border-l-4 border-l-rose-500">
+        <div class="text-xs text-brand-300/80 font-medium">حالات التأخر (+5 دقائق)</div>
+        <div id="stat-late" class="text-2xl font-bold text-rose-400 mt-1">0</div>
+      </div>
+    </div>
+
+    <!-- بطاقات الطلاب بالخارج حالياً مع العداد المباشر -->
+    <section class="glass-card p-6 rounded-3xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-base md:text-lg font-bold text-white flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+          الطلاب خارج الفصل حالياً
+        </h2>
+        <span id="active-badge" class="text-xs font-bold px-3 py-1 rounded-full bg-brand-800 text-brand-200 border border-brand-600/40">0 طالب</span>
+      </div>
+
       <div id="active-passes-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- تتولد بطاقات الطلاب بالخارج هنا تلقائياً -->
+        <!-- تتولد بطاقات الطلاب هنا -->
       </div>
     </section>
 
-    <!-- تسجيل استئذان + إضافة طالب جديد -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- نموذج الاستئذان -->
-      <div class="md:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-        <h3 class="font-bold text-slate-800 mb-4">تسجيل إذن خروج</h3>
+    <!-- النماذج: تسجيل إذن + إضافة طالب -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- نموذج استئذان جديد -->
+      <div class="lg:col-span-2 glass-card p-6 rounded-3xl space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-bold text-white text-base">منح إذن خروج لطالب</h3>
+          <span class="text-xs text-brand-400 font-medium">يُفضل ألا يزيد عن طالب واحد في نفس الوقت</span>
+        </div>
+
         <form onsubmit="handleGrantPass(event)" class="space-y-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">اختر الطالب</label>
-            <select id="student-select" required class="w-full border border-slate-200 rounded-xl p-3 bg-slate-50 focus:bg-white text-sm outline-none">
-              <option value="">-- اضغط لاختيار الطالب --</option>
-            </select>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-brand-300 mb-1.5">اختر الطالب</label>
+              <select id="student-select" required class="w-full bg-brand-900/80 border border-brand-700/60 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                <option value="">-- اضغط لاختيار الطالب --</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-brand-300 mb-1.5">السبب</label>
+              <select id="reason-select" class="w-full bg-brand-900/80 border border-brand-700/60 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                <option value="دورة المياه">دورة المياه</option>
+                <option value="المرشد الطلابي">المرشد الطلابي</option>
+                <option value="الإدارة / الوكيل">الإدارة / الوكيل</option>
+                <option value="العيادة المدرسية">العيادة المدرسية</option>
+                <option value="شرب ماء">شرب ماء</option>
+                <option value="أخرى">أخرى</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">سبب الخروج</label>
-            <select id="reason-select" class="w-full border border-slate-200 rounded-xl p-3 bg-slate-50 focus:bg-white text-sm outline-none">
-              <option value="دورة المياه">دورة المياه</option>
-              <option value="المرشد الطلابي">المرشد الطلابي</option>
-              <option value="الإدارة / المساعد">الإدارة / المساعد</option>
-              <option value="العيادة المدرسية">العيادة المدرسية</option>
-              <option value="شرب ماء">شرب ماء</option>
-              <option value="أخرى">أخرى</option>
-            </select>
-          </div>
-          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition shadow-sm">
-            تسجيل خروج الآن
+
+          <button type="submit" class="w-full bg-gradient-to-r from-brand-500 to-fuchsia-600 hover:from-brand-600 hover:to-fuchsia-700 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-brand-500/25 active:scale-98">
+            تسجيل خروج الطالب الآن
           </button>
         </form>
       </div>
 
-      <!-- إضافة طالب للقائمة -->
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-        <h3 class="font-bold text-slate-800 mb-4">➕ إضافة طالب للفصل</h3>
+      <!-- إضافة طالب للفصل -->
+      <div class="glass-card p-6 rounded-3xl space-y-4">
+        <h3 class="font-bold text-white text-base">إضافة طالب جديد</h3>
         <form onsubmit="handleAddStudent(event)" class="space-y-3">
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">اسم الطالب</label>
-            <input type="text" id="new-student-name" required placeholder="الاسم الثلاثي" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm bg-slate-50 focus:bg-white outline-none">
+            <label class="block text-xs font-medium text-brand-300 mb-1.5">اسم الطالب</label>
+            <input type="text" id="new-student-name" required placeholder="الاسم الثلاثي للطالب" class="w-full bg-brand-900/80 border border-brand-700/60 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">الرقم / الباركود</label>
-            <input type="text" id="new-student-number" placeholder="اختياري" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm bg-slate-50 focus:bg-white outline-none">
+            <label class="block text-xs font-medium text-brand-300 mb-1.5">الرقم الأكاديمي / الباركود</label>
+            <input type="text" id="new-student-number" placeholder="اختياري" class="w-full bg-brand-900/80 border border-brand-700/60 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
           </div>
-          <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 rounded-xl text-sm transition">
+          <button type="submit" class="w-full bg-brand-800 hover:bg-brand-700 text-brand-100 font-semibold py-3 rounded-xl text-sm transition border border-brand-600/40">
             حفظ الطالب
           </button>
         </form>
       </div>
+
     </div>
 
-    <!-- سجل العمليات السابقة -->
-    <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-      <h3 class="font-bold text-slate-800 mb-4">سجل العمليات اليومية</h3>
-      <div class="overflow-x-auto">
+    <!-- جدول السجلات السابقة والبحث -->
+    <section class="glass-card p-6 rounded-3xl space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <h3 class="font-bold text-white text-base">سجل الاستئذانات الحديثة</h3>
+        <input type="text" id="search-input" oninput="filterPasses()" placeholder="بحث باسم الطالب..." class="bg-brand-900/80 border border-brand-700/50 rounded-xl px-4 py-2 text-xs md:text-sm text-white focus:outline-none focus:border-brand-500 transition w-full md:w-64">
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-brand-800/60">
         <table class="w-full text-sm text-right">
-          <thead class="bg-slate-50 text-slate-500 border-b border-slate-100">
+          <thead class="bg-brand-900/80 text-brand-300 text-xs font-semibold">
             <tr>
               <th class="py-3 px-4">الطالب</th>
               <th class="py-3 px-4">السبب</th>
@@ -136,16 +269,49 @@
               <th class="py-3 px-4">الحالة</th>
             </tr>
           </thead>
-          <tbody id="history-table-body" class="divide-y divide-slate-100">
+          <tbody id="history-table-body" class="divide-y divide-brand-800/40 text-brand-200">
             <!-- تتولد السجلات هنا -->
           </tbody>
         </table>
       </div>
     </section>
+
+  </div>
+
+  <!-- ================= 4. مودال إدارة المعلمين المصرح لهم ================= -->
+  <div id="teachers-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+    <div class="glass-card max-w-lg w-full p-6 md:p-8 rounded-3xl border border-brand-500/30 space-y-6 shadow-2xl relative animate-fade-in">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <span>👥</span> إدارة صلاحيات المعلمين
+        </h3>
+        <button onclick="toggleTeacherModal()" class="text-brand-400 hover:text-white text-xl font-bold">✕</button>
+      </div>
+
+      <!-- نموذج إضافة معلم جديد -->
+      <form onsubmit="handleAddTeacher(event)" class="space-y-3 bg-brand-900/60 p-4 rounded-2xl border border-brand-700/50">
+        <label class="block text-xs font-semibold text-brand-200">إضافة بريد معلم جديد للقائمة البيضاء</label>
+        <div class="flex gap-2">
+          <input type="email" id="new-teacher-email" required placeholder="teacher@gmail.com" class="flex-1 bg-brand-950 border border-brand-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500">
+          <input type="text" id="new-teacher-name" placeholder="اسم المعلم" class="w-1/3 bg-brand-950 border border-brand-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500">
+        </div>
+        <button type="submit" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-medium py-2 rounded-xl text-xs transition">
+          إعطاء الصلاحية الآن
+        </button>
+      </form>
+
+      <!-- قائمة المعلمين المعتمدين -->
+      <div class="space-y-2">
+        <div class="text-xs font-semibold text-brand-300">المعلمون المصرح لهم حالياً:</div>
+        <div id="teachers-list-container" class="max-h-56 overflow-y-auto space-y-2 pr-1">
+          <!-- يتولد هنا -->
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
-    // === 1. إعدادات Supabase (ضع بياناتك هنا) ===
+    // === مفاتيح الربط لقاعدة البيانات Supabase ===
     const SUPABASE_URL = "https://ieonzcyartylucjssbwe.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_lCK2mL3cLcC33Rr2BrDRlA_sVuEU9FA";
     
@@ -154,8 +320,9 @@
     let currentUser = null;
     let studentsList = [];
     let passesList = [];
+    let teachersList = [];
 
-    // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
+    // التحقق من الجلسة عند بدء الصفحة
     window.addEventListener("DOMContentLoaded", async () => {
       const { data: { session } } = await db.auth.getSession();
       if (session?.user) {
@@ -164,47 +331,48 @@
       } else {
         showView("login-view");
       }
+
+      // تحديث توقيت الطلاب المستأذنين كل ثانية للعداد الحي
+      setInterval(updateLiveTimers, 1000);
     });
 
-    // تسجيل الدخول بقوقل
     async function loginWithGoogle() {
       await db.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: window.location.href.split('#')[0] // يعود لنفس رابط صفحة GitHub
+          redirectTo: window.location.origin + window.location.pathname
         }
       });
     }
 
-    // تسجيل الخروج
     async function logout() {
       await db.auth.signOut();
       window.location.reload();
     }
 
-    // التحقق من وجود المعلم في جدول المعتمدين (Whitelist)
     async function verifyTeacherAndLoad() {
       const { data: teacher } = await db
         .from("teachers")
-        .select("id")
+        .select("id, name")
         .eq("email", currentUser.email)
         .single();
 
       if (!teacher) {
-        document.getElementById("unauthorized-email").innerText = `حسابك: ${currentUser.email}`;
+        document.getElementById("unauthorized-email").innerText = currentUser.email;
         showView("unauthorized-view");
         return;
       }
 
-      document.getElementById("teacher-email-display").innerText = `المعلم: ${currentUser.email}`;
+      document.getElementById("teacher-email-display").innerText = `المعلم: ${teacher.name || currentUser.email}`;
       showView("app-view");
       loadData();
+      loadTeachers();
 
-      // الاستماع للتحديثات الحية (Realtime)
-      db.channel('public:passes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'passes' }, () => {
-          loadData();
-        })
+      // الاستماع الحي (Realtime)
+      db.channel('public-sync')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'passes' }, () => loadData())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'students' }, () => loadData())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'teachers' }, () => loadTeachers())
         .subscribe();
     }
 
@@ -215,18 +383,18 @@
     }
 
     async function loadData() {
-      // جلب الطلاب
       const { data: students } = await db.from("students").select("*").order("name");
       studentsList = students || [];
       renderStudentsSelect();
 
-      // جلب الاستئذانات
       const { data: passes } = await db
         .from("passes")
         .select("*, students(name)")
         .order("time_out", { ascending: false });
       passesList = passes || [];
+
       renderPasses();
+      updateStats();
     }
 
     function renderStudentsSelect() {
@@ -235,57 +403,105 @@
         studentsList.map(s => `<option value="${s.id}">${s.name} ${s.student_number ? `(${s.student_number})` : ''}</option>`).join('');
     }
 
+    function updateStats() {
+      const active = passesList.filter(p => p.status === 'active');
+      document.getElementById("stat-active").innerText = active.length;
+      document.getElementById("active-badge").innerText = `${active.length} طالب`;
+      document.getElementById("stat-students").innerText = studentsList.length;
+
+      // إحصائيات اليوم
+      const todayStr = new Date().toISOString().slice(0, 10);
+      const todayPasses = passesList.filter(p => p.time_out.startsWith(todayStr));
+      document.getElementById("stat-today").innerText = todayPasses.length;
+
+      // المتأخرين
+      const lateCount = passesList.filter(p => (p.duration_minutes && p.duration_minutes >= 5) || (p.status === 'active' && ((new Date() - new Date(p.time_out)) / 60000 >= 5))).length;
+      document.getElementById("stat-late").innerText = lateCount;
+    }
+
     function renderPasses() {
       const activeContainer = document.getElementById("active-passes-list");
-      const historyContainer = document.getElementById("history-table-body");
       const activePasses = passesList.filter(p => p.status === 'active');
 
-      document.getElementById("active-count-badge").innerText = `${activePasses.length} طالب`;
-
-      // الطلاب خارج الفصل
       if (activePasses.length === 0) {
-        activeContainer.innerHTML = '<div class="col-span-2 text-center py-6 text-slate-400 bg-slate-50 rounded-xl text-sm font-semibold">جميع الطلاب داخل الفصل حالياً ✅</div>';
+        activeContainer.innerHTML = `
+          <div class="col-span-1 md:col-span-2 text-center py-8 text-brand-300/50 bg-brand-900/30 rounded-2xl border border-brand-800/40 text-sm">
+            ✓ جميع الطلاب متواجدون داخل الفصل حالياً
+          </div>
+        `;
       } else {
         activeContainer.innerHTML = activePasses.map(p => {
-          const diffMinutes = Math.floor((new Date() - new Date(p.time_out)) / 60000);
-          const isLate = diffMinutes >= 6;
           return `
-            <div class="p-4 rounded-xl border flex items-center justify-between ${isLate ? 'bg-rose-50 border-rose-200' : 'bg-amber-50 border-amber-200'}">
-              <div>
-                <div class="font-bold text-slate-800">${p.students?.name || 'طالب'}</div>
-                <div class="text-xs text-slate-500 mt-0.5">السبب: ${p.reason}</div>
-                <div class="text-xs font-bold mt-2 ${isLate ? 'text-rose-600' : 'text-amber-700'}">
-                  مضى على خروجه: ${diffMinutes} دقيقة ${isLate ? '⚠️ (تأخر)' : ''}
+            <div id="card-${p.id}" class="glass-card glass-card-hover p-4 rounded-2xl border flex items-center justify-between border-brand-600/30">
+              <div class="space-y-1">
+                <div class="font-bold text-white text-base">${p.students?.name || 'طالب'}</div>
+                <div class="text-xs text-brand-300">السبب: <span class="text-brand-200 font-medium">${p.reason}</span></div>
+                <div class="text-xs font-semibold flex items-center gap-1.5" id="timer-${p.id}" data-timeout="${p.time_out}">
+                  ⏳ جارٍ حساب الوقت...
                 </div>
               </div>
-              <button onclick="returnStudent('${p.id}', '${p.time_out}')" class="bg-white hover:bg-slate-100 text-slate-800 border text-xs font-bold px-3 py-2 rounded-lg shadow-sm transition">
-                تسجيل عودة
+              <button onclick="returnStudent('${p.id}', '${p.time_out}')" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md transition active:scale-95">
+                تسجيل العودة ✓
               </button>
             </div>
           `;
         }).join('');
       }
 
-      // جدول السجلات السابقة
-      historyContainer.innerHTML = passesList.slice(0, 15).map(p => {
-        const timeOutFormatted = new Date(p.time_out).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' });
+      filterPasses();
+    }
+
+    function updateLiveTimers() {
+      const timerElements = document.querySelectorAll('[id^="timer-"]');
+      timerElements.forEach(el => {
+        const timeOut = new Date(el.getAttribute('data-timeout'));
+        const totalSeconds = Math.max(0, Math.floor((new Date() - timeOut) / 1000));
+        const mins = Math.floor(totalSeconds / 60);
+        const secs = totalSeconds % 60;
+        const formattedSecs = secs < 10 ? '0' + secs : secs;
+
+        const isLate = mins >= 5;
+        const card = el.closest('[id^="card-"]');
+
+        if (isLate) {
+          el.innerHTML = `<span class="text-rose-400 font-bold animate-pulse">⚠️ تجاوز الوقت: ${mins}:${formattedSecs} دقيقة</span>`;
+          if (card) {
+            card.classList.add('border-rose-500/50', 'bg-rose-950/20');
+            card.classList.remove('border-brand-600/30');
+          }
+        } else {
+          el.innerHTML = `<span class="text-amber-300">مضى: ${mins}:${formattedSecs} دقيقة</span>`;
+        }
+      });
+    }
+
+    function filterPasses() {
+      const query = document.getElementById("search-input")?.value.toLowerCase() || "";
+      const historyContainer = document.getElementById("history-table-body");
+      
+      const filtered = passesList.filter(p => {
+        const name = (p.students?.name || "").toLowerCase();
+        return name.includes(query);
+      });
+
+      historyContainer.innerHTML = filtered.slice(0, 15).map(p => {
+        const timeFormatted = new Date(p.time_out).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' });
         return `
-          <tr class="hover:bg-slate-50">
-            <td class="py-3 px-4 font-bold text-slate-700">${p.students?.name || 'مجهول'}</td>
-            <td class="py-3 px-4 text-slate-600">${p.reason}</td>
-            <td class="py-3 px-4 text-slate-500">${timeOutFormatted}</td>
-            <td class="py-3 px-4 text-slate-600 font-semibold">${p.duration_minutes ? p.duration_minutes + ' دقيقة' : 'خارج الفصل'}</td>
+          <tr class="hover:bg-brand-800/30 transition">
+            <td class="py-3 px-4 font-semibold text-white">${p.students?.name || 'مجهول'}</td>
+            <td class="py-3 px-4 text-brand-300">${p.reason}</td>
+            <td class="py-3 px-4 text-brand-400 font-mono text-xs">${timeFormatted}</td>
+            <td class="py-3 px-4 text-brand-200">${p.duration_minutes ? p.duration_minutes + ' دقيقة' : 'خارج الفصل'}</td>
             <td class="py-3 px-4">
               ${p.status === 'active' 
-                ? '<span class="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full font-bold">بالخارج</span>' 
-                : '<span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-semibold">عاد للفصل</span>'}
+                ? '<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs px-2.5 py-0.5 rounded-full font-bold">بالخارج الآن</span>' 
+                : '<span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs px-2.5 py-0.5 rounded-full font-medium">تمت العودة</span>'}
             </td>
           </tr>
         `;
       }).join('');
     }
 
-    // تسجيل إذن جديد
     async function handleGrantPass(e) {
       e.preventDefault();
       const studentId = document.getElementById("student-select").value;
@@ -293,7 +509,7 @@
 
       const activeCount = passesList.filter(p => p.status === 'active').length;
       if (activeCount >= 1) {
-        if (!confirm("يوجد طالب مستأذن بالخارج حالياً، هل تسمح لطالب آخر؟")) return;
+        if (!confirm("يوجد طالب مستأذن بالخارج حالياً! هل تود السماح لطالب إضافي بالخروج؟")) return;
       }
 
       await db.from("passes").insert([{
@@ -308,7 +524,6 @@
       loadData();
     }
 
-    // تسجيل عودة
     async function returnStudent(passId, timeOut) {
       const minutes = Math.max(1, Math.round((new Date() - new Date(timeOut)) / 60000));
       await db.from("passes").update({
@@ -320,7 +535,6 @@
       loadData();
     }
 
-    // إضافة طالب
     async function handleAddStudent(e) {
       e.preventDefault();
       const name = document.getElementById("new-student-name").value;
@@ -332,20 +546,68 @@
       loadData();
     }
 
-    // تصدير CSV
+    // === إدارة المعلمين (Whitelist) ===
+    function toggleTeacherModal() {
+      const modal = document.getElementById("teachers-modal");
+      modal.classList.toggle("hidden");
+    }
+
+    async function loadTeachers() {
+      const { data } = await db.from("teachers").select("*").order("created_at", { ascending: false });
+      teachersList = data || [];
+      renderTeachers();
+    }
+
+    function renderTeachers() {
+      const container = document.getElementById("teachers-list-container");
+      container.innerHTML = teachersList.map(t => `
+        <div class="flex items-center justify-between p-2.5 bg-brand-950/80 rounded-xl border border-brand-800/70 text-xs">
+          <div>
+            <div class="text-white font-medium">${t.name || 'معلم معتمد'}</div>
+            <div class="text-brand-400 font-mono">${t.email}</div>
+          </div>
+          ${t.email !== currentUser.email ? `
+            <button onclick="removeTeacher('${t.id}')" class="text-rose-400 hover:text-rose-300 font-bold px-2 py-1 rounded">حذف</button>
+          ` : '<span class="text-brand-500 font-bold px-2">أنت</span>'}
+        </div>
+      `).join('');
+    }
+
+    async function handleAddTeacher(e) {
+      e.preventDefault();
+      const email = document.getElementById("new-teacher-email").value.trim().toLowerCase();
+      const name = document.getElementById("new-teacher-name").value.trim();
+
+      const { error } = await db.from("teachers").insert([{ email: email, name: name || "معلم" }]);
+      if (error) {
+        alert("حدث خطأ أو أن المعلم مضاف مسبقاً!");
+      } else {
+        document.getElementById("new-teacher-email").value = "";
+        document.getElementById("new-teacher-name").value = "";
+        loadTeachers();
+      }
+    }
+
+    async function removeTeacher(id) {
+      if (!confirm("هل أنت متأكد من سحب صلاحية هذا المعلم؟")) return;
+      await db.from("teachers").delete().eq("id", id);
+      loadTeachers();
+    }
+
+    // تصدير ملف CSV
     function exportCSV() {
-      const headers = ["اسم الطالب", "السبب", "وقت الخروج", "المدة بالدقائق", "الحالة"];
+      const headers = ["اسم الطالب", "سبب الخروج", "وقت الخروج", "المدة بالدقائق", "الحالة"];
       const rows = passesList.map(p => [
-        p.students?.name || "",
-        p.reason,
-        new Date(p.time_out).toLocaleString("ar-SA"),
+        `"${p.students?.name || ''}"`,
+        `"${p.reason}"`,
+        `"${new Date(p.time_out).toLocaleString("ar-SA")}"`,
         p.duration_minutes || "جارٍ",
         p.status === "active" ? "بالخارج" : "عاد"
       ]);
       const csv = "data:text/csv;charset=utf-8,\uFEFF" + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
       const link = document.createElement("a");
       link.href = encodeURI(csv);
-      link.download = `استئذانات_${new Date().toISOString().slice(0,10)}.csv`;
+      link.download = `تقرير_استئذانات_${new Date().toISOString().slice(0,10)}.csv`;
       link.click();
     }
   </script>
