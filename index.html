@@ -46,11 +46,16 @@
             softPulse: {
               '0%, 100%': { transform: 'scale(1)', opacity: '1' },
               '50%': { transform: 'scale(1.05)', opacity: '0.85' }
+            },
+            toastSlide: {
+              '0%': { opacity: '0', transform: 'translateX(-50%) translateY(-20px)' },
+              '100%': { opacity: '1', transform: 'translateX(-50%) translateY(0)' }
             }
           },
           animation: {
             'fade-up': 'fadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
             'pulse-soft': 'softPulse 2s infinite ease-in-out',
+            'toast': 'toastSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
           }
         }
       }
@@ -70,7 +75,29 @@
     }
   </style>
 </head>
-<body class="text-slate-800 antialiased selection:bg-brand-600 selection:text-white min-h-screen flex flex-col md:flex-row">
+<body class="text-slate-800 antialiased selection:bg-brand-600 selection:text-white min-h-screen flex flex-col md:flex-row relative">
+
+  <!-- ================= حاوية الإشعارات المخصصة (Toast Notifications) ================= -->
+  <div id="toast-container" class="fixed top-5 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 pointer-events-none w-full max-w-sm px-4"></div>
+
+  <!-- ================= نافذة التأكيد المخصصة (Confirmation Modal) ================= -->
+  <div id="confirm-modal" class="hidden fixed inset-0 z-[90] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+    <div class="bg-white max-w-sm w-full p-6 rounded-3xl border border-slate-200 shadow-2xl space-y-4 animate-fade-up text-center">
+      <div id="confirm-icon" class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold">
+        ⚠️
+      </div>
+      <h3 id="confirm-title" class="text-lg font-extrabold text-slate-900">تأكيد الإجراء</h3>
+      <p id="confirm-message" class="text-xs md:text-sm text-slate-500 font-medium leading-relaxed"></p>
+      <div class="flex gap-2.5 pt-2">
+        <button id="confirm-btn-yes" class="flex-1 bg-brand-700 hover:bg-brand-800 text-white font-bold py-3 rounded-2xl text-xs md:text-sm transition active:scale-95">
+          نعم، متابعة
+        </button>
+        <button id="confirm-btn-no" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-2xl text-xs md:text-sm transition">
+          إلغاء
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- ================= 1. شاشة تسجيل الدخول ================= -->
   <div id="login-view" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-100">
@@ -220,7 +247,6 @@
       <!-- ================= تبويب 1: لوحة الاستئذان المباشر ================= -->
       <div id="tab-dashboard" class="space-y-6 md:space-y-8 animate-fade-up">
         
-        <!-- أزرار الإجراءات السريعة في الأعلى -->
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900">متابعة الفصل المباشرة</h1>
@@ -240,7 +266,6 @@
           </div>
         </div>
 
-        <!-- الإحصائيات الأربعة السريعة -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
           <div class="bg-white p-4 md:p-5 rounded-2xl md:rounded-3xl border border-slate-200 shadow-sm">
             <div class="text-[11px] md:text-sm font-bold text-slate-500">الطلاب بالخارج الآن</div>
@@ -263,7 +288,6 @@
           </div>
         </div>
 
-        <!-- بطاقات الطلاب خارج الفصل حالياً -->
         <section class="bg-white p-5 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-5">
           <div class="flex items-center justify-between border-b border-slate-100 pb-4">
             <div class="flex items-center gap-2.5">
@@ -276,7 +300,7 @@
           <div id="active-passes-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </section>
 
-        <!-- قائمة الانتظار الذكية (Waitlist) -->
+        <!-- قائمة الانتظار الذكية -->
         <section class="bg-amber-50/50 p-5 md:p-6 rounded-3xl border border-amber-200 space-y-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
@@ -303,7 +327,6 @@
             </span>
           </div>
 
-          <!-- أزرار الاستئذان السريع (One-Tap Quick Pass) -->
           <div class="space-y-2 pt-1">
             <label class="block text-xs font-extrabold text-brand-700">استئذان سريع بنقرة واحدة (للطالب المحدد أدناه):</label>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -325,7 +348,7 @@
           <form onsubmit="handleGrantPass(event)" class="space-y-4 md:space-y-6 pt-2">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 
-              <!-- اختيار الطالب (قائمة مخصصة 100%) -->
+              <!-- اختيار الطالب (قائمة مخصصة) -->
               <div class="relative">
                 <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">الطالب المستأذن</label>
                 <input type="hidden" id="custom-student-value" required>
@@ -339,7 +362,7 @@
                 </div>
               </div>
 
-              <!-- سبب الاستئذان (قائمة مخصصة 100%) -->
+              <!-- سبب الاستئذان (قائمة مخصصة) -->
               <div class="relative">
                 <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">سبب الاستئذان</label>
                 <input type="hidden" id="custom-reason-value" value="دورة المياه">
@@ -373,7 +396,6 @@
           <p class="text-sm md:text-base text-slate-500 mt-1">رسوم بيانية لتحليل سلوك الاستئذان، أوقات الذروة، وأكثر الطلاب استهلاكاً لوقت الحصص</p>
         </div>
 
-        <!-- رسوم Chart.js البيانية -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
             <h3 class="font-extrabold text-slate-900 text-base">توزيع أسباب الاستئذان</h3>
@@ -389,7 +411,6 @@
           </div>
         </div>
 
-        <!-- جدول أكثر الطلاب تكراراً للاستئذان (Top Repeaters) -->
         <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
           <h3 class="font-extrabold text-slate-900 text-lg">أكثر الطلاب استئذاناً والدقائق المفقودة</h3>
           <div class="overflow-x-auto">
@@ -454,7 +475,6 @@
             <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">إدارة طلاب الفصل</h2>
             <p class="text-sm md:text-base text-slate-500 mt-1">أضف طلاب جدد أو استورد قائمة الفصل كاملة بملف Excel</p>
           </div>
-          <!-- زر الاستيراد السريع -->
           <div>
             <input type="file" id="csv-file-input" accept=".csv, .txt" class="hidden" onchange="handleCSVImport(event)">
             <button onclick="document.getElementById('csv-file-input').click()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs md:text-sm px-4 py-3 rounded-2xl shadow-sm transition active:scale-95 flex items-center gap-2">
@@ -711,7 +731,7 @@
     </div>
   </div>
 
-  <!-- ================= قسم التقرير الرسمي المعد للطباعة فقط (Printable) ================= -->
+  <!-- ================= قسم التقرير الرسمي المعد للطباعة فقط ================= -->
   <div id="printable-report" class="hidden p-8 bg-white text-slate-900">
     <div class="border-b-2 border-slate-800 pb-4 mb-6 flex justify-between items-center">
       <div>
@@ -763,6 +783,62 @@
     let reasonsChart = null;
     let hoursChart = null;
 
+    // === نظام الإشعارات المنبثقة المخصص (Custom Toast Notification) ===
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      let bgColors = 'bg-slate-900 border-slate-700 text-white';
+      let icon = '🔔';
+
+      if (type === 'success') {
+        bgColors = 'bg-emerald-700 border-emerald-600 text-white shadow-emerald-700/20';
+        icon = '✓';
+      } else if (type === 'error') {
+        bgColors = 'bg-rose-700 border-rose-600 text-white shadow-rose-700/20';
+        icon = '✕';
+      } else if (type === 'warning') {
+        bgColors = 'bg-amber-600 border-amber-500 text-white shadow-amber-600/20';
+        icon = '⚠️';
+      }
+
+      toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl border text-xs md:text-sm font-bold shadow-xl animate-toast transition duration-200 ${bgColors}`;
+      toast.innerHTML = `
+        <span class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs shrink-0">${icon}</span>
+        <span class="flex-1">${message}</span>
+      `;
+
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        setTimeout(() => toast.remove(), 200);
+      }, 3200);
+    }
+
+    // === نافذة التأكيد المخصصة (Custom Confirm Modal) ===
+    function showConfirmModal(title, message, onConfirm, icon = '⚠️') {
+      const modal = document.getElementById('confirm-modal');
+      document.getElementById('confirm-title').innerText = title;
+      document.getElementById('confirm-message').innerText = message;
+      document.getElementById('confirm-icon').innerText = icon;
+
+      const btnYes = document.getElementById('confirm-btn-yes');
+      const btnNo = document.getElementById('confirm-btn-no');
+
+      modal.classList.remove('hidden');
+
+      btnYes.onclick = () => {
+        modal.classList.add('hidden');
+        if (onConfirm) onConfirm();
+      };
+
+      btnNo.onclick = () => {
+        modal.classList.add('hidden');
+      };
+    }
+
     window.addEventListener("DOMContentLoaded", async () => {
       document.addEventListener("click", (e) => {
         if (!e.target.closest('.relative')) closeAllDropdowns();
@@ -783,15 +859,14 @@
       setInterval(updateLiveTimers, 1000);
     });
 
-    // تشغيل نغمة تنبيه صوتية لطيفة عند تخطي الوقت
     function playChime() {
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3); // A5
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3);
         gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
         osc.connect(gain);
@@ -864,6 +939,7 @@
       document.getElementById('stat-limit-text').innerText = val;
       applySettingButtonStyles();
       checkCapacityLimit();
+      showToast(`تم حفظ سعة الفصل: ${val} طلاب`, 'success');
     }
 
     function saveDurationSetting(val) {
@@ -872,6 +948,7 @@
       document.getElementById('current-duration-display').innerText = `${val} دقائق`;
       applySettingButtonStyles();
       renderPasses();
+      showToast(`تم حفظ مهلة الاستئذان: ${val} دقائق`, 'success');
     }
 
     function applySettingButtonStyles() {
@@ -1136,7 +1213,7 @@
     async function triggerQuickPass(reason) {
       const studentId = document.getElementById("custom-student-value").value;
       if (!studentId) {
-        alert("يرجى اختيار الطالب أولاً من القائمة!");
+        showToast("يرجى اختيار الطالب أولاً من القائمة!", "warning");
         return;
       }
       selectReason(reason);
@@ -1146,20 +1223,20 @@
     function addToWaitlist() {
       const studentId = document.getElementById("custom-student-value").value;
       if (!studentId) {
-        alert("يرجى اختيار الطالب أولاً!");
+        showToast("يرجى اختيار الطالب أولاً من القائمة!", "warning");
         return;
       }
       const student = studentsList.find(s => s.id === studentId);
       if (!student) return;
 
       if (waitlist.some(w => w.id === studentId)) {
-        alert("الطالب مضاف بالفعل لقائمة الانتظار!");
+        showToast("الطالب مضاف بالفعل لقائمة الانتظار!", "warning");
         return;
       }
 
       waitlist.push(student);
       renderWaitlist();
-      alert(`تم إضافة الطالب (${student.name}) لقائمة الانتظار`);
+      showToast(`تمت إضافة (${student.name}) لقائمة الانتظار`, "success");
     }
 
     function renderWaitlist() {
@@ -1189,6 +1266,7 @@
     function removeFromWaitlist(studentId) {
       waitlist = waitlist.filter(w => w.id !== studentId);
       renderWaitlist();
+      showToast("تم إزالة الطالب من قائمة الانتظار", "info");
     }
 
     function grantWaitlistPass(studentId) {
@@ -1202,7 +1280,7 @@
       const reason = document.getElementById("custom-reason-value").value;
 
       if (!studentId) {
-        alert("يرجى اختيار الطالب أولاً!");
+        showToast("يرجى اختيار الطالب أولاً!", "warning");
         return;
       }
       executeGrantPass(studentId, reason);
@@ -1211,9 +1289,19 @@
     async function executeGrantPass(studentId, reason) {
       const activeCount = passesList.filter(p => p.status === 'active').length;
       if (activeCount >= maxCapacity) {
-        if (!confirm(`تنبيه: الحد المسموح به (${maxCapacity}) مكتمل حالياً! هل الاستئذان طارئ؟`)) return;
+        showConfirmModal(
+          "تجاوز سعة الفصل",
+          `الحد المسموح به (${maxCapacity}) مكتمل حالياً. هل هذا الاستئذان طارئ وتريد السماح له؟`,
+          async () => {
+            await insertPassToDatabase(studentId, reason);
+          }
+        );
+        return;
       }
+      await insertPassToDatabase(studentId, reason);
+    }
 
+    async function insertPassToDatabase(studentId, reason) {
       await db.from("passes").insert([{
         student_id: studentId,
         reason: reason,
@@ -1225,6 +1313,7 @@
       document.getElementById("custom-student-value").value = "";
       document.getElementById("custom-student-label").innerText = "-- اضغط لاختيار الطالب --";
       document.getElementById("custom-student-label").classList.add("text-slate-400");
+      showToast("تم تسجيل خروج الطالب بنجاح", "success");
       loadData();
     }
 
@@ -1236,16 +1325,17 @@
         status: "returned"
       }).eq("id", passId);
 
-      // تنبيه إذا كان هناك طالب بالانتظار
+      showToast("تم تسجيل عودة الطالب للفصل بنجاح ✓", "success");
+
       if (waitlist.length > 0) {
         const nextStudent = waitlist[0];
-        alert(`🔔 عاد الطالب للفصل! الدور الآن في قائمة الانتظار على: (${nextStudent.name})`);
+        showToast(`🔔 الدور الآن في قائمة الانتظار على: (${nextStudent.name})`, "info");
       }
 
       loadData();
     }
 
-    // === ماسح الباركود بالكاميرا (Html5-QRCode) ===
+    // === ماسح الباركود بالكاميرا ===
     function openScannerModal() {
       document.getElementById("scanner-modal").classList.remove("hidden");
       html5QrScanner = new Html5Qrcode("qr-reader");
@@ -1254,7 +1344,7 @@
         { fps: 10, qrbox: { width: 250, height: 250 } },
         onScanSuccess
       ).catch(err => {
-        alert("تعذر الوصول للكاميرا: " + err);
+        showToast("تعذر تشغيل الكاميرا: " + err, "error");
         closeScannerModal();
       });
     }
@@ -1270,25 +1360,21 @@
       closeScannerModal();
       const code = decodedText.trim();
 
-      // البحث عن الطالب عبر رقمه أو باركوده
       const student = studentsList.find(s => s.student_number === code || s.id === code);
       if (!student) {
-        alert(`لم يتم العثور على طالب مرتبط بالرمز: ${code}`);
+        showToast(`لم يتم العثور على طالب مرتبط بالرمز: ${code}`, "error");
         return;
       }
 
-      // هل الطالب بالخارج حالياً؟
       const activePass = passesList.find(p => p.student_id === student.id && p.status === 'active');
       if (activePass) {
         await returnStudent(activePass.id, activePass.time_out);
-        alert(`تم تسجيل عودة الطالب: ${student.name} بنجاح ✓`);
       } else {
         await executeGrantPass(student.id, 'دورة المياه');
-        alert(`تم تسجيل خروج الطالب: ${student.name} بنجاح ✓`);
       }
     }
 
-    // === وضع الكشك الذاتي (Kiosk Mode) ===
+    // === وضع الكشك الذاتي ===
     function toggleKioskMode(show) {
       document.getElementById("kiosk-mode-view").classList.toggle("hidden", !show);
       if (show) {
@@ -1301,11 +1387,11 @@
       const code = document.getElementById("kiosk-student-input").value.trim();
       const student = studentsList.find(s => s.student_number === code || s.name === code);
       if (!student) {
-        alert("الرقم الأكاديمي غير مسجل!");
+        showToast("الرقم الأكاديمي غير مسجل!", "error");
         return;
       }
       await executeGrantPass(student.id, reason);
-      alert(`تم تسجيل الإذن للطالب: ${student.name}`);
+      showToast(`تم تسجيل الإذن للطالب: ${student.name}`, "success");
       document.getElementById("kiosk-student-input").value = "";
     }
 
@@ -1313,20 +1399,20 @@
       const code = document.getElementById("kiosk-student-input").value.trim();
       const student = studentsList.find(s => s.student_number === code || s.name === code);
       if (!student) {
-        alert("الرقم الأكاديمي غير مسجل!");
+        showToast("الرقم الأكاديمي غير مسجل!", "error");
         return;
       }
       const activePass = passesList.find(p => p.student_id === student.id && p.status === 'active');
       if (!activePass) {
-        alert("هذا الطالب ليس مسجلاً كخارج الفصل حالياً!");
+        showToast("هذا الطالب ليس مسجلاً كخارج الفصل!", "warning");
         return;
       }
       await returnStudent(activePass.id, activePass.time_out);
-      alert(`حمداً لله على سلامتك يا ${student.name}، تم تسجيل عودتك!`);
+      showToast(`حمداً لله على سلامتك يا ${student.name}، تم تسجيل عودتك!`, "success");
       document.getElementById("kiosk-student-input").value = "";
     }
 
-    // === استيراد الطلاب بملف CSV / Excel ===
+    // === استيراد الطلاب بملف CSV ===
     function handleCSVImport(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -1346,15 +1432,14 @@
             addedCount++;
           }
         }
-        alert(`تم استيراد ${addedCount} طالب بنجاح!`);
+        showToast(`تم استيراد ${addedCount} طالب بنجاح!`, "success");
         loadData();
       };
       reader.readAsText(file);
     }
 
-    // === التحليلات والرسوم البيانية (Chart.js) ===
+    // === التحليلات والرسوم البيانية ===
     function renderAnalyticsCharts() {
-      // 1. حساب الأسباب
       const reasonsCount = {};
       passesList.forEach(p => {
         reasonsCount[p.reason] = (reasonsCount[p.reason] || 0) + 1;
@@ -1374,7 +1459,6 @@
         options: { responsive: true, maintainAspectRatio: false }
       });
 
-      // 2. أوقات الاستئذان على مدار ساعات اليوم
       const hoursMap = {};
       for (let i = 7; i <= 14; i++) hoursMap[`${i}:00`] = 0;
       passesList.forEach(p => {
@@ -1398,7 +1482,6 @@
         options: { responsive: true, maintainAspectRatio: false }
       });
 
-      // 3. جدول أكثر الطلاب خروجاً
       const studentStats = {};
       passesList.forEach(p => {
         if (!studentStats[p.student_id]) {
@@ -1432,7 +1515,6 @@
       }).join('');
     }
 
-    // === طباعة التقرير الرسمي PDF ===
     function printOfficialReport() {
       document.getElementById('print-date').innerText = new Date().toLocaleDateString('ar-SA');
       document.getElementById('print-teacher').innerText = currentUser.email;
@@ -1521,7 +1603,7 @@
               <div class="font-extrabold text-slate-900 text-base">${c.name}</div>
               <div class="text-xs text-brand-600 font-bold mt-0.5">${studentsCount} طلاب مسجلين</div>
             </div>
-            <button onclick="deleteClass('${c.id}')" class="text-rose-600 hover:text-rose-700 font-bold text-xs p-2 rounded-xl hover:bg-rose-50 transition active:scale-95">
+            <button onclick="confirmDeleteClass('${c.id}')" class="text-rose-600 hover:text-rose-700 font-bold text-xs p-2 rounded-xl hover:bg-rose-50 transition active:scale-95">
               حذف
             </button>
           </div>
@@ -1536,13 +1618,16 @@
 
       await db.from("classes").insert([{ name: name, grade: grade }]);
       document.getElementById("new-class-name").value = "";
+      showToast("تم إنشاء الشُعبة بنجاح", "success");
       loadData();
     }
 
-    async function deleteClass(id) {
-      if (!confirm("هل أنت متأكد من حذف هذه الشعبة؟ سيتم إزالة ربط الطلاب بها.")) return;
-      await db.from("classes").delete().eq("id", id);
-      loadData();
+    function confirmDeleteClass(id) {
+      showConfirmModal("حذف الشُعبة", "هل أنت متأكد من حذف هذه الشعبة؟ سيتم إزالة ربط الطلاب بها.", async () => {
+        await db.from("classes").delete().eq("id", id);
+        showToast("تم حذف الشعبة بنجاح", "info");
+        loadData();
+      });
     }
 
     // === إدارة وتعديل الطلاب ===
@@ -1566,7 +1651,7 @@
               <button onclick="openEditStudentModal('${s.id}')" class="text-brand-700 hover:text-brand-800 font-bold text-xs md:text-sm px-2.5 py-1.5 rounded-xl hover:bg-brand-50 transition active:scale-95">
                 تعديل
               </button>
-              <button onclick="deleteStudent('${s.id}')" class="text-rose-600 hover:text-rose-700 font-bold text-xs md:text-sm px-2.5 py-1.5 rounded-xl hover:bg-rose-50 transition active:scale-95">
+              <button onclick="confirmDeleteStudent('${s.id}')" class="text-rose-600 hover:text-rose-700 font-bold text-xs md:text-sm px-2.5 py-1.5 rounded-xl hover:bg-rose-50 transition active:scale-95">
                 حذف
               </button>
             </div>
@@ -1575,10 +1660,12 @@
       }).join('');
     }
 
-    async function deleteStudent(id) {
-      if (!confirm("هل أنت متأكد من حذف هذا الطالب من القائمة؟")) return;
-      await db.from("students").delete().eq("id", id);
-      loadData();
+    function confirmDeleteStudent(id) {
+      showConfirmModal("حذف الطالب", "هل أنت متأكد من حذف هذا الطالب من القائمة؟", async () => {
+        await db.from("students").delete().eq("id", id);
+        showToast("تم حذف الطالب من القائمة", "info");
+        loadData();
+      });
     }
 
     async function handleAddStudent(e) {
@@ -1593,6 +1680,7 @@
       document.getElementById("new-student-class-id").value = "";
       document.getElementById("new-student-class-label").innerText = "-- اختر الشُعبة --";
       document.getElementById("new-student-class-label").classList.add("text-slate-400");
+      showToast("تم حفظ الطالب في القائمة بنجاح", "success");
       loadData();
     }
 
@@ -1629,6 +1717,7 @@
       }).eq('id', id);
 
       closeEditStudentModal();
+      showToast("تم تحديث بيانات الطالب بنجاح", "success");
       loadData();
     }
 
@@ -1657,8 +1746,8 @@
               تعديل
             </button>
             ${t.email !== currentUser.email ? `
-              <button onclick="removeTeacher('${t.id}')" class="text-rose-600 hover:text-rose-700 font-extrabold text-sm px-3 py-1.5 rounded-xl hover:bg-rose-50 transition active:scale-95">حذف</button>
-            ` : '<span class="text-brand-700 font-extrabold text-xs md:text-sm px-3 py-1.5 bg-brand-100 rounded-xl">حسابك</span>'}
+              <button onclick="confirmRemoveTeacher('${t.id}')" class="text-rose-600 hover:text-rose-700 font-extrabold text-sm px-3 py-1.5 rounded-xl hover:bg-rose-50 transition active:scale-95">حذف</button>
+            ` : '<span class="text-brand-700 font-extrabold text-xs md:text-sm px-3 py-1 bg-brand-100 rounded-xl">حسابك</span>'}
           </div>
         </div>
       `).join('');
@@ -1671,18 +1760,21 @@
 
       const { error } = await db.from("teachers").insert([{ email: email, name: name || "معلم" }]);
       if (error) {
-        alert("حدث خطأ أو أن البريد مسجل مسبقاً!");
+        showToast("حدث خطأ أو أن البريد مسجل مسبقاً!", "error");
       } else {
         document.getElementById("new-teacher-email").value = "";
         document.getElementById("new-teacher-name").value = "";
+        showToast("تم منح الصلاحية للمعلم بنجاح", "success");
         loadTeachers();
       }
     }
 
-    async function removeTeacher(id) {
-      if (!confirm("هل أنت متأكد من سحب صلاحية هذا المعلم؟")) return;
-      await db.from("teachers").delete().eq("id", id);
-      loadTeachers();
+    function confirmRemoveTeacher(id) {
+      showConfirmModal("سحب الصلاحية", "هل أنت متأكد من سحب صلاحية هذا المعلم؟", async () => {
+        await db.from("teachers").delete().eq("id", id);
+        showToast("تم سحب صلاحية المعلم", "info");
+        loadTeachers();
+      });
     }
 
     function openEditTeacherModal(id) {
@@ -1706,12 +1798,9 @@
       const name = document.getElementById('edit-teacher-name').value.trim();
       const email = document.getElementById('edit-teacher-email').value.trim().toLowerCase();
 
-      await db.from('teachers').update({
-        name: name,
-        email: email
-      }).eq('id', id);
-
+      await db.from('teachers').update({ name: name, email: email }).eq('id', id);
       closeEditTeacherModal();
+      showToast("تم تعديل بيانات المعلم بنجاح", "success");
       loadTeachers();
     }
 
@@ -1733,6 +1822,7 @@
       link.href = encodeURI(csv);
       link.download = `تقرير_الاستئذانات_${new Date().toISOString().slice(0,10)}.csv`;
       link.click();
+      showToast("تم تصدير ملف الإكسل بنجاح", "success");
     }
   </script>
 </body>
