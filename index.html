@@ -71,7 +71,20 @@
     .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
     .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     
-    /* ضبط عزل طباعة التقرير عن الباركودات لمنع التداخل */
+    /* ضبط فيديو الكاميرا ليتمدد ويملأ الإطار تماماً في كل الشاشات والتابلت */
+    #kiosk-qr-reader video {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      border-radius: 1.5rem;
+    }
+    #qr-reader video {
+      width: 100% !important;
+      height: auto !important;
+      border-radius: 1rem;
+    }
+
+    /* ضبط الطباعة */
     @media print {
       body * { visibility: hidden !important; }
       body.printing-report #printable-report,
@@ -341,7 +354,7 @@
               <p class="text-xs md:text-sm text-slate-500 mt-0.5">اختر الطالب ثم انقر على الاستئذان السريع أو حدد الوجهة المخصصة</p>
             </div>
             <span id="capacity-warning-badge" class="hidden text-xs md:text-sm bg-rose-50 text-rose-700 border border-rose-200 font-extrabold px-3 py-1.5 rounded-xl self-start sm:self-auto">
-              ⚠️️ اكتمل الحد المسموح به لخروج الطلاب
+              ⚠️ اكتمل الحد المسموح به لخروج الطلاب
             </span>
           </div>
 
@@ -551,13 +564,12 @@
             <p class="text-xs md:text-sm text-slate-500 mt-1">تتبع جميع عمليات الخروج، الأوقات المستغرقة، وتصدير التقارير الرسمية</p>
           </div>
           
-          <!-- نقل زري تحميل الإكسل والتقرير الورقي هنا -->
           <div class="flex items-center gap-2 flex-wrap">
             <button onclick="exportCSV()" class="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-4 py-2.5 rounded-2xl text-xs md:text-sm font-bold shadow-sm transition active:scale-95">
               📥 تصدير Excel
             </button>
             <button onclick="printOfficialReport()" class="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-4 py-2.5 rounded-2xl text-xs md:text-sm font-bold shadow-sm transition active:scale-95">
-              🖨️️ طباعة تقرير رسمي (PDF)
+              🖨 طباعة تقرير رسمي (PDF)
             </button>
             <input type="text" id="search-history-input" oninput="renderHistoryTable()" placeholder="ابحث باسم الطالب..." class="bg-white border border-slate-200 rounded-2xl px-4 py-2.5 text-xs md:text-sm font-semibold outline-none focus:border-brand-600 w-full sm:w-64 shadow-sm">
           </div>
@@ -660,43 +672,51 @@
     </div>
   </div>
 
-  <!-- ================= استعادة تصميم الكشك القديم الأنيق بالكامل مع زر الكاميرا ================= -->
-  <div id="kiosk-mode-view" class="hidden fixed inset-0 z-50 bg-slate-900 text-white flex flex-col items-center justify-center p-6 text-center space-y-8 animate-fade-up">
-    <button onclick="toggleKioskMode(false)" class="absolute top-6 left-6 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition">
+  <!-- ================= وضع الكشك الذاتي بتصميم مكبر ومناسب للتابلت ================= -->
+  <div id="kiosk-mode-view" class="hidden fixed inset-0 z-50 bg-slate-950 text-white flex flex-col items-center justify-center p-4 md:p-8 text-center animate-fade-up overflow-y-auto">
+    
+    <button onclick="toggleKioskMode(false)" class="absolute top-6 left-6 px-5 py-2.5 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded-2xl text-xs md:text-sm font-bold transition border border-slate-700">
       ✕ الخروج من وضع الكشك
     </button>
 
-    <div class="w-24 h-24 bg-brand-700 rounded-3xl flex items-center justify-center mx-auto shadow-2xl text-4xl">
-      📋
-    </div>
+    <!-- حاوية الكشك مع تكبير متناسق للتابلت -->
+    <div class="w-full max-w-md md:max-w-lg space-y-6 md:space-y-8 transform md:scale-105 transition-transform">
+      
+      <div class="w-20 h-20 md:w-24 md:h-24 bg-brand-700 rounded-3xl flex items-center justify-center mx-auto shadow-2xl text-4xl">
+        📋
+      </div>
 
-    <div class="space-y-2 max-w-md">
-      <h1 class="text-3xl md:text-4xl font-extrabold">كشك الاستئذان الذاتي</h1>
-      <p class="text-slate-400 text-sm">أدخل رقمك الأكاديمي أو امسح بطاقتك للخروج أو تأكيد العودة للفصل</p>
-    </div>
+      <div class="space-y-2">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-wide">كشك الاستئذان الذاتي</h1>
+        <p class="text-slate-400 text-xs md:text-sm">أدخل رقمك الأكاديمي أو امسح بطاقتك للخروج أو تأكيد العودة للفصل</p>
+      </div>
 
-    <!-- نافذة الكاميرا في الكشك (تظهر فقط عند الضغط على زر الكاميرا) -->
-    <div id="kiosk-camera-box" class="hidden w-full max-w-sm rounded-3xl overflow-hidden border-2 border-brand-500 shadow-2xl bg-black">
-      <div id="kiosk-qr-reader" class="w-full"></div>
-      <button onclick="closeKioskCamera()" class="w-full py-2 bg-slate-800 text-xs font-bold text-slate-300">إغلاق الكاميرا</button>
-    </div>
-
-    <!-- أدوات الكشك الأساسية القديمة -->
-    <div class="w-full max-w-sm space-y-4">
-      <div class="flex gap-2">
-        <input type="text" id="kiosk-student-input" placeholder="أدخل الرقم الأكاديمي..." class="flex-1 bg-slate-800 border-2 border-slate-700 focus:border-brand-500 rounded-2xl p-4 text-center text-xl font-bold tracking-widest outline-none">
-        <button onclick="openKioskCamera()" title="مسح البطاقة بالكاميرا" class="p-4 bg-brand-700 hover:bg-brand-600 rounded-2xl text-xl flex items-center justify-center border border-brand-600 transition active:scale-95 cursor-pointer">
-          📷
+      <!-- نافذة الكاميرا التفاعلية للتابلت مع أبعاد متناسقة 100% -->
+      <div id="kiosk-camera-box" class="hidden w-full aspect-square max-w-sm mx-auto rounded-3xl overflow-hidden border-4 border-brand-500 shadow-2xl bg-black relative">
+        <div id="kiosk-qr-reader" class="w-full h-full"></div>
+        <button onclick="closeKioskCamera()" class="absolute bottom-3 left-1/2 -translate-x-1/2 px-5 py-2 bg-slate-900/90 text-white rounded-xl text-xs font-bold border border-slate-700 shadow-md">
+          إغلاق الكاميرا
         </button>
       </div>
 
-      <div class="grid grid-cols-2 gap-3">
-        <button onclick="processKioskAction('دورة المياه')" class="p-4 bg-brand-600 hover:bg-brand-500 rounded-2xl font-bold text-sm transition active:scale-95 cursor-pointer">خروج (دورة مياه)</button>
-        <button onclick="processKioskAction('شرب ماء')" class="p-4 bg-blue-600 hover:bg-blue-500 rounded-2xl font-bold text-sm transition active:scale-95 cursor-pointer">خروج (شرب ماء)</button>
+      <!-- حقل الإدخال وزر الكاميرا -->
+      <div class="space-y-4">
+        <div class="flex gap-3">
+          <input type="text" id="kiosk-student-input" onkeyup="if(event.key === 'Enter') handleKioskEnter()" placeholder="أدخل الرقم الأكاديمي..." class="flex-1 bg-slate-900 border-2 border-slate-700 focus:border-brand-500 rounded-2xl p-4 md:p-5 text-center text-lg md:text-2xl font-bold tracking-widest outline-none text-white shadow-inner">
+          <button onclick="openKioskCamera()" title="مسح البطاقة بالكاميرا" class="p-4 md:p-5 bg-brand-700 hover:bg-brand-600 rounded-2xl text-xl md:text-2xl flex items-center justify-center border border-brand-600 transition active:scale-95 cursor-pointer shadow-lg shadow-brand-700/30">
+            📷
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 md:gap-4">
+          <button onclick="processKioskAction('دورة المياه')" class="p-4 md:p-5 bg-brand-600 hover:bg-brand-500 rounded-2xl font-extrabold text-sm md:text-base transition active:scale-95 cursor-pointer shadow-md">خروج (دورة مياه)</button>
+          <button onclick="processKioskAction('شرب ماء')" class="p-4 md:p-5 bg-blue-600 hover:bg-blue-500 rounded-2xl font-extrabold text-sm md:text-base transition active:scale-95 cursor-pointer shadow-md">خروج (شرب ماء)</button>
+        </div>
+        <button onclick="processKioskReturn()" class="w-full p-4 md:p-5 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-black text-base md:text-lg shadow-xl shadow-emerald-600/20 transition active:scale-95 cursor-pointer">
+          تسجيل عودة للفصل ✓
+        </button>
       </div>
-      <button onclick="processKioskReturn()" class="w-full p-4 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-extrabold text-base shadow-lg transition active:scale-95 cursor-pointer">
-        تسجيل عودة للفصل ✓
-      </button>
+
     </div>
   </div>
 
@@ -902,12 +922,20 @@
       document.getElementById('current-duration-display').innerText = `${maxAllowedDuration} دقائق`;
       applySettingButtonStyles();
 
+      const urlParams = new URLSearchParams(window.location.search);
+      const studentParam = urlParams.get('student');
+
       const { data: { session } } = await db.auth.getSession();
       if (session?.user) {
         currentUser = session.user;
         verifyTeacherAndLoad();
       } else {
-        showView("login-view");
+        if (studentParam) {
+          toggleKioskMode(true);
+          document.getElementById('kiosk-student-input').value = studentParam;
+        } else {
+          showView("login-view");
+        }
       }
 
       setInterval(updateLiveTimers, 1000);
@@ -1388,7 +1416,6 @@
       loadData();
     }
 
-    // === ماسح الباركود العام ===
     function openScannerModal() {
       document.getElementById("scanner-modal").classList.remove("hidden");
       html5QrScanner = new Html5Qrcode("qr-reader");
@@ -1434,23 +1461,50 @@
       }
     }
 
-    // === الكشك القديم الأنيق مع زر الكاميرا ===
+    // === تشغيل وضع الكشك وتكبير الشاشة وملؤها تلقائياً ===
     function toggleKioskMode(show) {
-      document.getElementById("kiosk-mode-view").classList.toggle("hidden", !show);
+      const kioskView = document.getElementById("kiosk-mode-view");
+      kioskView.classList.toggle("hidden", !show);
+
       if (show) {
         document.getElementById("kiosk-student-input").value = "";
         document.getElementById("kiosk-student-input").focus();
+        
+        // تفعيل وضع ملء الشاشة الكامل إذا سمح المتصفح
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        }
       } else {
         closeKioskCamera();
+        if (document.fullscreenElement && document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        }
       }
     }
 
     function openKioskCamera() {
-      document.getElementById("kiosk-camera-box").classList.remove("hidden");
+      const cameraBox = document.getElementById("kiosk-camera-box");
+      cameraBox.classList.remove("hidden");
+      
       kioskQrScanner = new Html5Qrcode("kiosk-qr-reader");
+      
+      // إعدادات مرنة للكاميرا لتتناسب بدقة مع شاشات التابلت
+      const qrboxFunction = function(viewfinderWidth, viewfinderHeight) {
+        const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+        const qrboxEdgeSize = Math.floor(minEdge * 0.75);
+        return {
+          width: qrboxEdgeSize,
+          height: qrboxEdgeSize
+        };
+      };
+
       kioskQrScanner.start(
-        { facingMode: "user" },
-        { fps: 10, qrbox: { width: 220, height: 220 } },
+        { facingMode: "user" }, // الكاميرا الأمامية للتابلت
+        {
+          fps: 15,
+          qrbox: qrboxFunction,
+          aspectRatio: 1.0
+        },
         (decodedText) => {
           closeKioskCamera();
           let code = decodedText.trim();
@@ -1461,10 +1515,11 @@
             } catch(e) {}
           }
           document.getElementById('kiosk-student-input').value = code;
-          showToast("تم مسح البطاقة بنجاح، اختر سبب الخروج أو العودة!", "success");
+          playChime();
+          showToast("تم مسح البطاقة! اضغط على سبب الخروج أو العودة أدناه", "success");
         }
       ).catch(err => {
-        showToast("تعذر تشغيل الكاميرا: " + err, "error");
+        showToast("تعذر فتح الكاميرا: " + err, "error");
         closeKioskCamera();
       });
     }
@@ -1475,6 +1530,11 @@
         kioskQrScanner = null;
       }
       document.getElementById("kiosk-camera-box").classList.add("hidden");
+    }
+
+    function handleKioskEnter() {
+      // افتراضياً عند ضغط Enter في الكشك بعد كتابة الرقم الأكاديمي يعتبر خروج دورة مياه
+      processKioskAction('دورة المياه');
     }
 
     async function processKioskAction(reason) {
@@ -1498,7 +1558,7 @@
       }
       const activePass = passesList.find(p => p.student_id === student.id && p.status === 'active');
       if (!activePass) {
-        showToast("هذا الطالب ليس مسجلاً كخارج الفصل حالياً!", "warning");
+        showToast("أنت لست مسجلاً كخارج الفصل حالياً!", "warning");
         return;
       }
       await returnStudent(activePass.id, activePass.time_out);
@@ -1506,7 +1566,7 @@
       document.getElementById("kiosk-student-input").value = "";
     }
 
-    // === طباعة بطاقات الباركود (منع التداخل) ===
+    // طباعة باركودات الطلاب
     function printStudentBarcodes() {
       const printGrid = document.getElementById("barcodes-print-grid");
       printGrid.innerHTML = "";
@@ -1544,7 +1604,6 @@
         });
       });
 
-      // ضبط الفئة لمنع تداخل التقرير مع الباركود
       document.body.classList.remove('printing-report');
       document.body.classList.add('printing-barcodes');
 
@@ -1554,7 +1613,7 @@
       }, 500);
     }
 
-    // طباعة التقرير الرسمي (PDF)
+    // طباعة التقرير الرسمي
     function printOfficialReport() {
       document.getElementById('print-date').innerText = new Date().toLocaleDateString('ar-SA');
       document.getElementById('print-teacher').innerText = currentUser ? currentUser.email : 'المعلم المشرف';
