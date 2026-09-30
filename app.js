@@ -53,8 +53,8 @@
    alter publication supabase_realtime add table pass_logs;
    ===================================================================== */
 
-const SUPABASE_URL = "https://YOUR-PROJECT.supabase.co";
-const SUPABASE_ANON_KEY = "YOUR-ANON-KEY";
+const SUPABASE_URL = "https://fjyhnfmfpxqtwkkaswih.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_ST4o7Tdi6TYBRJJBTo-t1w_9so0D7_z";
 
 const sb = (window.supabase || window.supabaseJs).createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
