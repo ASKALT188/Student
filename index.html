@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Supabase JS Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- خط IBM Plex Sans Arabic بأوزان متعددة -->
+  <!-- خط IBM Plex Sans Arabic -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -119,7 +119,7 @@
     <!-- القائمة الجانبية الثابتة على اليمين (Sidebar) -->
     <aside class="w-72 bg-white border-l border-slate-200 flex flex-col justify-between p-6 shrink-0 shadow-sm">
       <div class="space-y-8">
-        <!-- هوية الموقع واللوجو -->
+        <!-- هوية الموقع -->
         <div class="flex items-center gap-3.5 pb-6 border-b border-slate-100">
           <div class="w-12 h-12 rounded-2xl bg-brand-700 text-white flex items-center justify-center font-extrabold text-xl shadow-md shadow-brand-700/25">
             P
@@ -147,14 +147,15 @@
             إدارة الطلاب والقوائم
           </button>
 
-          <button onclick="toggleTeacherModal()" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition duration-150 active:scale-98">
-            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+          <!-- زر إدارة المعلمين الجديد كتاب كامل -->
+          <button onclick="switchTab('teachers')" id="nav-teachers" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition duration-150 active:scale-98">
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             صلاحيات المعلمين
           </button>
         </nav>
       </div>
 
-      <!-- معلومات المعلم والزر السفلي للتحكم -->
+      <!-- معلومات المعلم وزر الخروج -->
       <div class="space-y-4 pt-6 border-t border-slate-100">
         <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200">
           <div class="text-xs text-slate-400 font-bold mb-1">المعلم الحالي:</div>
@@ -174,8 +175,6 @@
 
       <!-- ================= تبويب 1: لوحة الاستئذان المباشر ================= -->
       <div id="tab-dashboard" class="space-y-8 animate-fade-up">
-
-        <!-- الشريط العلوي والإحصائيات السريعة -->
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900">متابعة الفصل المباشرة</h1>
@@ -190,7 +189,7 @@
           </div>
         </div>
 
-        <!-- كروت الإحصائيات مع تأثير الرفع -->
+        <!-- كروت الإحصائيات -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition duration-200">
             <div class="text-xs md:text-sm font-bold text-slate-500">الطلاب بالخارج الآن</div>
@@ -213,7 +212,7 @@
           </div>
         </div>
 
-        <!-- المستأذنون حالياً في الممرات -->
+        <!-- المستأذنون حالياً -->
         <section class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
           <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
             <div class="flex items-center gap-3">
@@ -221,9 +220,9 @@
               <h2 class="text-lg md:text-xl font-extrabold text-slate-900">الطلاب خارج الفصل في هذا الوقت</h2>
             </div>
 
-            <!-- خيارات الضوابط المدرسية -->
+            <!-- خيارات الضوابط -->
             <div class="flex items-center gap-3">
-              <!-- قائمة مخصصة لاختيار السعة -->
+              <!-- سعة الفصل -->
               <div class="relative">
                 <button type="button" onclick="toggleDropdown('capacity-dropdown')" class="flex items-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-4 py-2.5 rounded-2xl text-xs md:text-sm font-bold text-slate-700 transition active:scale-95">
                   <span>السعة:</span>
@@ -237,7 +236,7 @@
                 </div>
               </div>
 
-              <!-- قائمة مخصصة لاختيار المدة -->
+              <!-- المهلة -->
               <div class="relative">
                 <button type="button" onclick="toggleDropdown('duration-dropdown')" class="flex items-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-4 py-2.5 rounded-2xl text-xs md:text-sm font-bold text-slate-700 transition active:scale-95">
                   <span>المهلة:</span>
@@ -254,11 +253,11 @@
           </div>
 
           <div id="active-passes-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- تتولد بطاقات المستأذنين هنا تلقائياً -->
+            <!-- تتولد بطاقات المستأذنين هنا -->
           </div>
         </section>
 
-        <!-- نموذج إصدار استئذان جديد -->
+        <!-- نموذج إصدار استئذان -->
         <section class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
           <div class="flex items-center justify-between">
             <div>
@@ -273,7 +272,7 @@
           <form onsubmit="handleGrantPass(event)" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-              <!-- قائمة مخصصة: اختيار الطالب -->
+              <!-- اختيار الطالب -->
               <div class="relative">
                 <label class="block text-xs md:text-sm font-bold text-slate-700 mb-2">الطالب المستأذن</label>
                 <input type="hidden" id="custom-student-value" required>
@@ -284,12 +283,12 @@
                 <div id="student-dropdown" class="hidden absolute inset-x-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 z-40 max-h-60 overflow-y-auto custom-scroll animate-fade-up">
                   <input type="text" oninput="filterStudentDropdown(this.value)" placeholder="ابحث باسم الطالب..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs md:text-sm font-semibold mb-2 outline-none focus:border-brand-600">
                   <div id="student-options-container" class="space-y-1">
-                    <!-- تتولد الخيارات هنا -->
+                    <!-- خيارات الطلاب -->
                   </div>
                 </div>
               </div>
 
-              <!-- قائمة مخصصة: سبب الاستئذان -->
+              <!-- سبب الاستئذان -->
               <div class="relative">
                 <label class="block text-xs md:text-sm font-bold text-slate-700 mb-2">سبب الاستئذان</label>
                 <input type="hidden" id="custom-reason-value" value="دورة المياه">
@@ -314,7 +313,6 @@
             </button>
           </form>
         </section>
-
       </div>
 
       <!-- ================= تبويب 2: سجل الاستئذانات الكامل ================= -->
@@ -352,7 +350,7 @@
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 class="text-2xl font-extrabold text-slate-900">قائمة طلاب الفصل</h2>
-            <p class="text-sm text-slate-500 mt-1">أضف طلاب جدد أو عدّل القائمة المعتمدة</p>
+            <p class="text-sm text-slate-500 mt-1">أضف طلاب جدد أو راجع بيانات الطلاب المسجلين</p>
           </div>
         </div>
 
@@ -369,13 +367,13 @@
                 <label class="block text-xs font-bold text-slate-700 mb-1.5">الرقم الأكاديمي / الباركود</label>
                 <input type="text" id="new-student-number" placeholder="اختياري" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm font-semibold outline-none focus:border-brand-600">
               </div>
-              <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-bold py-3.5 rounded-2xl text-sm transition active:scale-95">
+              <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-bold py-3.5 rounded-2xl text-sm transition active:scale-95 cursor-pointer">
                 حفظ الطالب في القائمة
               </button>
             </form>
           </div>
 
-          <!-- جدول عرض الطلاب -->
+          <!-- بطاقات عرض الطلاب -->
           <div class="lg:col-span-2 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
             <h3 class="font-extrabold text-slate-900 text-lg">الطلاب المسجلون (<span id="students-count-badge">0</span>)</h3>
             <div id="students-grid-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-96 overflow-y-auto custom-scroll pr-1">
@@ -385,40 +383,45 @@
         </div>
       </div>
 
+      <!-- ================= تبويب 4: إدارة صلاحيات المعلمين (القائمة المماثلة للطلاب) ================= -->
+      <div id="tab-teachers" class="hidden space-y-6 animate-fade-up">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-extrabold text-slate-900">صلاحيات المعلمين المعتمدين</h2>
+            <p class="text-sm text-slate-500 mt-1">أضف حسابات المعلمين المصرح لهم بالدخول وإدارة الاستئذانات في النظام</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- نموذج إضافة معلم جديد -->
+          <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-extrabold text-slate-900 text-lg">منح صلاحية لمعلم جديد</h3>
+            <form onsubmit="handleAddTeacher(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">البريد الإلكتروني (Google)</label>
+                <input type="email" id="new-teacher-email" required placeholder="teacher@gmail.com" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm font-semibold outline-none focus:border-brand-600">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">اسم المعلم</label>
+                <input type="text" id="new-teacher-name" placeholder="مثال: أ. عبدالله" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-sm font-semibold outline-none focus:border-brand-600">
+              </div>
+              <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-bold py-3.5 rounded-2xl text-sm transition active:scale-95 cursor-pointer">
+                إضافة المعلم واعتماد الصلاحية
+              </button>
+            </form>
+          </div>
+
+          <!-- قائمة المعلمين المعتمدين -->
+          <div class="lg:col-span-2 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-extrabold text-slate-900 text-lg">المعلمون الحاصلون على الصلاحية (<span id="teachers-count-badge">0</span>)</h3>
+            <div id="teachers-grid-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-96 overflow-y-auto custom-scroll pr-1">
+              <!-- تتولد بطاقات المعلمين هنا -->
+            </div>
+          </div>
+        </div>
+      </div>
+
     </main>
-  </div>
-
-  <!-- ================= 4. نافذة إدارة المعلمين (Modal) ================= -->
-  <div id="teachers-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-    <div class="bg-white max-w-lg w-full p-8 rounded-3xl border border-slate-200 shadow-2xl space-y-6 animate-fade-up">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-        <div>
-          <h3 class="text-xl font-extrabold text-slate-900">صلاحيات المعلمين المعتمدين</h3>
-          <p class="text-xs text-slate-400 mt-0.5">أضف إيميلات المعلمين للسماح لهم بإدارة الاستئذانات</p>
-        </div>
-        <button onclick="toggleTeacherModal()" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 font-bold transition">✕</button>
-      </div>
-
-      <!-- نموذج إضافة معلم -->
-      <form onsubmit="handleAddTeacher(event)" class="space-y-3 bg-slate-50 p-5 rounded-2xl border border-slate-200">
-        <label class="block text-xs font-bold text-slate-700">إضافة بريد معلم جديد</label>
-        <div class="flex gap-2">
-          <input type="email" id="new-teacher-email" required placeholder="teacher@gmail.com" class="flex-1 bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-semibold outline-none focus:border-brand-600">
-          <input type="text" id="new-teacher-name" placeholder="اسم المعلم" class="w-1/3 bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-semibold outline-none focus:border-brand-600">
-        </div>
-        <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-bold py-2.5 rounded-xl text-xs transition active:scale-95">
-          منح الصلاحية فوراً
-        </button>
-      </form>
-
-      <!-- قائمة المعلمين -->
-      <div class="space-y-2">
-        <div class="text-xs font-bold text-slate-500">المعلمون الحاصلون على الصلاحية:</div>
-        <div id="teachers-list-container" class="max-h-60 overflow-y-auto space-y-2 custom-scroll pr-1">
-          <!-- يتولد هنا -->
-        </div>
-      </div>
-    </div>
   </div>
 
   <script>
@@ -432,12 +435,10 @@
     let passesList = [];
     let teachersList = [];
 
-    // الضوابط الافتراضية
     let maxCapacity = parseInt(localStorage.getItem('pass_max_cap') || '1');
     let maxAllowedDuration = parseInt(localStorage.getItem('pass_max_dur') || '5');
 
     window.addEventListener("DOMContentLoaded", async () => {
-      // إغلاق أي قائمة مفتوحة عند الضغط خارجها
       document.addEventListener("click", (e) => {
         if (!e.target.closest('.relative')) {
           closeAllDropdowns();
@@ -455,25 +456,29 @@
       setInterval(updateLiveTimers, 1000);
     });
 
-    // التنقل بين التبويبات (Sidebar Tabs)
+    // التنقل بين الأقسام الجانبية
     function switchTab(tabId) {
-      ['dashboard', 'history', 'students'].forEach(t => {
-        document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tabId);
+      ['dashboard', 'history', 'students', 'teachers'].forEach(t => {
+        const tabEl = document.getElementById(`tab-${t}`);
+        if (tabEl) tabEl.classList.toggle('hidden', t !== tabId);
+
         const navBtn = document.getElementById(`nav-${t}`);
-        if (t === tabId) {
-          navBtn.className = "w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-brand-700 bg-brand-50 border border-brand-200/80 transition duration-150 active:scale-98";
-          navBtn.querySelector('svg').className = "w-5 h-5 text-brand-600";
-        } else {
-          navBtn.className = "w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition duration-150 active:scale-98";
-          navBtn.querySelector('svg').className = "w-5 h-5 text-slate-400";
+        if (navBtn) {
+          if (t === tabId) {
+            navBtn.className = "w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-brand-700 bg-brand-50 border border-brand-200/80 transition duration-150 active:scale-98";
+            navBtn.querySelector('svg').className = "w-5 h-5 text-brand-600";
+          } else {
+            navBtn.className = "w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition duration-150 active:scale-98";
+            navBtn.querySelector('svg').className = "w-5 h-5 text-slate-400";
+          }
         }
       });
 
       if (tabId === 'history') renderHistoryTable();
       if (tabId === 'students') renderStudentsManager();
+      if (tabId === 'teachers') renderTeachersManager();
     }
 
-    // القوائم المخصصة
     function toggleDropdown(id) {
       const el = document.getElementById(id);
       const isHidden = el.classList.contains('hidden');
@@ -718,6 +723,7 @@
       }).join('');
     }
 
+    // إدارة الطلاب
     function renderStudentsManager() {
       const badge = document.getElementById("students-count-badge");
       if (badge) badge.innerText = studentsList.length;
@@ -742,6 +748,54 @@
       if (!confirm("هل أنت متأكد من حذف هذا الطالب من القائمة؟")) return;
       await db.from("students").delete().eq("id", id);
       loadData();
+    }
+
+    // إدارة المعلمين (مماثلة للطلاب)
+    async function loadTeachers() {
+      const { data } = await db.from("teachers").select("*").order("created_at", { ascending: false });
+      teachersList = data || [];
+      renderTeachersManager();
+    }
+
+    function renderTeachersManager() {
+      const badge = document.getElementById("teachers-count-badge");
+      if (badge) badge.innerText = teachersList.length;
+
+      const grid = document.getElementById("teachers-grid-list");
+      if (!grid) return;
+
+      grid.innerHTML = teachersList.map(t => `
+        <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex items-center justify-between">
+          <div>
+            <div class="font-extrabold text-slate-900 text-sm">${t.name || 'معلم معتمد'}</div>
+            <div class="text-xs text-slate-500 font-mono">${t.email}</div>
+          </div>
+          ${t.email !== currentUser.email ? `
+            <button onclick="removeTeacher('${t.id}')" class="text-rose-600 hover:text-rose-700 font-bold text-xs p-2 rounded-xl hover:bg-rose-50 transition active:scale-95">حذف</button>
+          ` : '<span class="text-brand-700 font-extrabold text-xs px-3 py-1 bg-brand-50 rounded-lg">حسابك</span>'}
+        </div>
+      `).join('');
+    }
+
+    async function handleAddTeacher(e) {
+      e.preventDefault();
+      const email = document.getElementById("new-teacher-email").value.trim().toLowerCase();
+      const name = document.getElementById("new-teacher-name").value.trim();
+
+      const { error } = await db.from("teachers").insert([{ email: email, name: name || "معلم" }]);
+      if (error) {
+        alert("حدث خطأ أو أن البريد مسجل مسبقاً!");
+      } else {
+        document.getElementById("new-teacher-email").value = "";
+        document.getElementById("new-teacher-name").value = "";
+        loadTeachers();
+      }
+    }
+
+    async function removeTeacher(id) {
+      if (!confirm("هل أنت متأكد من سحب صلاحية هذا المعلم؟")) return;
+      await db.from("teachers").delete().eq("id", id);
+      loadTeachers();
     }
 
     async function handleGrantPass(e) {
@@ -795,54 +849,6 @@
       loadData();
     }
 
-    // === إدارة المعلمين (Modal) ===
-    function toggleTeacherModal() {
-      document.getElementById("teachers-modal").classList.toggle("hidden");
-    }
-
-    async function loadTeachers() {
-      const { data } = await db.from("teachers").select("*").order("created_at", { ascending: false });
-      teachersList = data || [];
-      renderTeachers();
-    }
-
-    function renderTeachers() {
-      const container = document.getElementById("teachers-list-container");
-      container.innerHTML = teachersList.map(t => `
-        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-2xl border border-slate-200 text-xs">
-          <div>
-            <div class="text-slate-900 font-bold">${t.name || 'معلم معتمد'}</div>
-            <div class="text-slate-500 font-mono">${t.email}</div>
-          </div>
-          ${t.email !== currentUser.email ? `
-            <button onclick="removeTeacher('${t.id}')" class="text-rose-600 hover:text-rose-700 font-extrabold px-3 py-1.5 rounded-xl hover:bg-rose-50 transition active:scale-95">حذف</button>
-          ` : '<span class="text-brand-700 font-extrabold px-3">أنت</span>'}
-        </div>
-      `).join('');
-    }
-
-    async function handleAddTeacher(e) {
-      e.preventDefault();
-      const email = document.getElementById("new-teacher-email").value.trim().toLowerCase();
-      const name = document.getElementById("new-teacher-name").value.trim();
-
-      const { error } = await db.from("teachers").insert([{ email: email, name: name || "معلم" }]);
-      if (error) {
-        alert("حدث خطأ أو أن البريد مسجل مسبقاً!");
-      } else {
-        document.getElementById("new-teacher-email").value = "";
-        document.getElementById("new-teacher-name").value = "";
-        loadTeachers();
-      }
-    }
-
-    async function removeTeacher(id) {
-      if (!confirm("هل أنت متأكد من سحب صلاحية هذا المعلم؟")) return;
-      await db.from("teachers").delete().eq("id", id);
-      loadTeachers();
-    }
-
-    // تصدير CSV
     function exportCSV() {
       const headers = ["اسم الطالب", "السبب", "وقت الخروج", "المدة بالدقائق", "الحالة"];
       const rows = passesList.map(p => [
