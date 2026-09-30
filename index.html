@@ -116,7 +116,7 @@
   <!-- ================= 3. الواجهة الرئيسية والتوافق مع الجوال ================= -->
   <div id="app-view" class="hidden flex-1 flex flex-col md:flex-row w-full min-h-screen">
 
-    <!-- شريط الرأس العلوي المخصص للجوال فقط -->
+    <!-- شريط الرأس للجوال -->
     <header class="md:hidden flex items-center justify-between bg-white border-b border-slate-200 p-4 sticky top-0 z-30 shadow-sm">
       <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-xl bg-brand-700 text-white flex items-center justify-center font-extrabold text-base shadow-sm">
@@ -268,7 +268,7 @@
           <form onsubmit="handleGrantPass(event)" class="space-y-4 md:space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 
-              <!-- اختيار الطالب -->
+              <!-- اختيار الطالب (قائمة مخصصة 100%) -->
               <div class="relative">
                 <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5 md:mb-2">الطالب المستأذن</label>
                 <input type="hidden" id="custom-student-value" required>
@@ -278,13 +278,11 @@
                 </button>
                 <div id="student-dropdown" class="hidden absolute inset-x-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 z-40 max-h-64 overflow-y-auto custom-scroll animate-fade-up">
                   <input type="text" oninput="filterStudentDropdown(this.value)" placeholder="ابحث باسم الطالب أو الشعبة..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs md:text-sm font-semibold mb-2 outline-none focus:border-brand-600">
-                  <div id="student-options-container" class="space-y-1">
-                    <!-- خيارات الطلاب -->
-                  </div>
+                  <div id="student-options-container" class="space-y-1"></div>
                 </div>
               </div>
 
-              <!-- سبب الاستئذان -->
+              <!-- سبب الاستئذان (قائمة مخصصة 100%) -->
               <div class="relative">
                 <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5 md:mb-2">سبب الاستئذان</label>
                 <input type="hidden" id="custom-reason-value" value="دورة المياه">
@@ -318,7 +316,6 @@
           <p class="text-sm md:text-base text-slate-500 mt-1">أنشئ الشُعب داخل صفوف المرحلة الثانوية ونظّم الطلاب وفقها</p>
         </div>
 
-        <!-- أزرار التبديل بين الصفوف (أول ثانوي، ثاني ثانوي، ثالث ثانوي) -->
         <div class="flex gap-2 p-1.5 bg-slate-100 rounded-2xl max-w-md">
           <button onclick="switchGradeFilter('أول ثانوي')" id="grade-tab-1" class="flex-1 py-3 rounded-xl font-extrabold text-xs md:text-sm bg-white text-brand-700 shadow-sm transition">أول ثانوي</button>
           <button onclick="switchGradeFilter('ثاني ثانوي')" id="grade-tab-2" class="flex-1 py-3 rounded-xl font-extrabold text-xs md:text-sm text-slate-600 hover:text-slate-900 transition">ثاني ثانوي</button>
@@ -326,7 +323,6 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- نموذج إنشاء شعبة جديدة -->
           <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-5">
             <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">إنشاء شُعبة جديدة</h3>
             <form onsubmit="handleAddClass(event)" class="space-y-4">
@@ -344,12 +340,9 @@
             </form>
           </div>
 
-          <!-- قائمة الشُعب في الصف المختار -->
           <div class="lg:col-span-2 bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
             <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">الشُعب التابعة لـ (<span id="current-grade-display">أول ثانوي</span>)</h3>
-            <div id="classes-grid-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[480px] overflow-y-auto custom-scroll pr-1">
-              <!-- تتولد بطاقات الشُعب هنا -->
-            </div>
+            <div id="classes-grid-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[480px] overflow-y-auto custom-scroll pr-1"></div>
           </div>
         </div>
       </div>
@@ -358,11 +351,10 @@
       <div id="tab-students" class="hidden space-y-6 md:space-y-8 animate-fade-up">
         <div>
           <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">إدارة طلاب الفصل</h2>
-          <p class="text-sm md:text-base text-slate-500 mt-1">أضف طلاب جدد ووزعهم على الشُعب المسجلة</p>
+          <p class="text-sm md:text-base text-slate-500 mt-1">أضف طلاب جدد أو عدّل بياناتهم وشُعبهم المسجلة</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- نموذج إضافة طالب -->
           <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
             <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">إضافة طالب جديد</h3>
             <form onsubmit="handleAddStudent(event)" class="space-y-4">
@@ -370,30 +362,34 @@
                 <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">اسم الطالب الثلاثي</label>
                 <input type="text" id="new-student-name" required placeholder="مثال: محمد علي الأحمد" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs md:text-sm font-semibold outline-none focus:border-brand-600">
               </div>
-              <div>
+
+              <!-- اختيار الشعبة (قائمة مخصصة بالكامل 100%) -->
+              <div class="relative">
                 <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">الشعبة والصف</label>
-                <select id="new-student-class" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs md:text-sm font-semibold outline-none focus:border-brand-600">
-                  <option value="">-- اختر الشُعبة --</option>
-                </select>
+                <input type="hidden" id="new-student-class-id" required>
+                <button type="button" onclick="toggleDropdown('new-student-class-dropdown')" class="w-full flex items-center justify-between bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-3.5 text-xs md:text-sm font-bold text-slate-800 transition active:scale-98">
+                  <span id="new-student-class-label" class="text-slate-400 truncate">-- اختر الشُعبة --</span>
+                  <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div id="new-student-class-dropdown" class="hidden absolute inset-x-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 z-40 max-h-52 overflow-y-auto custom-scroll animate-fade-up">
+                  <div id="new-student-class-options" class="space-y-1"></div>
+                </div>
               </div>
+
               <div>
                 <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1.5">الرقم الأكاديمي / الباركود</label>
                 <input type="text" id="new-student-number" placeholder="اختياري" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs md:text-sm font-semibold outline-none focus:border-brand-600">
               </div>
+
               <button type="submit" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-bold py-3.5 rounded-2xl text-xs md:text-sm transition active:scale-95 cursor-pointer">
                 حفظ الطالب في القائمة
               </button>
             </form>
           </div>
 
-          <!-- بطاقات عرض الطلاب -->
           <div class="lg:col-span-2 bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-            <div class="flex items-center justify-between">
-              <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">الطلاب المسجلون (<span id="students-count-badge">0</span>)</h3>
-            </div>
-            <div id="students-grid-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[480px] overflow-y-auto custom-scroll pr-1">
-              <!-- تتولد بطاقات الطلاب هنا -->
-            </div>
+            <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">الطلاب المسجلون (<span id="students-count-badge">0</span>)</h3>
+            <div id="students-grid-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[480px] overflow-y-auto custom-scroll pr-1"></div>
           </div>
         </div>
       </div>
@@ -421,9 +417,7 @@
                   <th class="py-3.5 px-4 md:py-4 md:px-6">الحالة</th>
                 </tr>
               </thead>
-              <tbody id="history-full-table-body" class="divide-y divide-slate-100 font-medium text-slate-700">
-                <!-- تتولد السجلات هنا -->
-              </tbody>
+              <tbody id="history-full-table-body" class="divide-y divide-slate-100 font-medium text-slate-700"></tbody>
             </table>
           </div>
         </div>
@@ -433,7 +427,7 @@
       <div id="tab-teachers" class="hidden space-y-6 md:space-y-8 animate-fade-up">
         <div>
           <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">صلاحيات المعلمين المعتمدين</h2>
-          <p class="text-sm md:text-base text-slate-500 mt-1">أضف حسابات المعلمين المصرح لهم بالدخول وإدارة الاستئذانات في النظام</p>
+          <p class="text-sm md:text-base text-slate-500 mt-1">أضف حسابات المعلمين المصرح لهم بالدخول أو عدّل بياناتهم</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -456,14 +450,12 @@
 
           <div class="lg:col-span-2 bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-5">
             <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">المعلمون الحاصلون على الصلاحية (<span id="teachers-count-badge">0</span>)</h3>
-            <div id="teachers-grid-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto custom-scroll pr-1">
-              <!-- تتولد بطاقات المعلمين هنا -->
-            </div>
+            <div id="teachers-grid-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto custom-scroll pr-1"></div>
           </div>
         </div>
       </div>
 
-      <!-- ================= تبويب 6: الإعدادات والضوابط المدرسية ================= -->
+      <!-- ================= تبويب 6: الإعدادات والضوابط ================= -->
       <div id="tab-settings" class="hidden space-y-6 md:space-y-8 animate-fade-up">
         <div>
           <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">إعدادات وضوابط الفصل</h2>
@@ -471,7 +463,6 @@
         </div>
 
         <div class="bg-white p-6 md:p-10 rounded-3xl border border-slate-200 shadow-sm max-w-2xl space-y-8">
-          <!-- إعداد سعة الاستئذان -->
           <div class="space-y-3 pb-6 border-b border-slate-100">
             <label class="block text-base md:text-lg font-extrabold text-slate-900">الحد الأقصى لخروج الطلاب في نفس الوقت</label>
             <p class="text-xs md:text-sm text-slate-500">يمنع النظام خروج أكثر من هذا العدد معاً إلا في الحالات الطارئة.</p>
@@ -482,7 +473,6 @@
             </div>
           </div>
 
-          <!-- إعداد المهلة المحددة -->
           <div class="space-y-3">
             <label class="block text-base md:text-lg font-extrabold text-slate-900">المهلة القصوى للاستئذان (بالدقائق)</label>
             <p class="text-xs md:text-sm text-slate-500">يتحول العداد للون الأحمر ويبدأ بالتنبيه في حال تخطي هذه المدة.</p>
@@ -496,6 +486,82 @@
       </div>
 
     </main>
+  </div>
+
+  <!-- ================= نافذة تعديل بيانات الطالب (Modal) ================= -->
+  <div id="edit-student-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+    <div class="bg-white max-w-md w-full p-6 md:p-8 rounded-3xl border border-slate-200 shadow-2xl space-y-5 animate-fade-up">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg md:text-xl font-extrabold text-slate-900">تعديل بيانات الطالب</h3>
+        <button onclick="closeEditStudentModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center">✕</button>
+      </div>
+
+      <form onsubmit="handleUpdateStudent(event)" class="space-y-4">
+        <input type="hidden" id="edit-student-id">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">اسم الطالب</label>
+          <input type="text" id="edit-student-name" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-sm font-semibold outline-none focus:border-brand-600">
+        </div>
+
+        <!-- اختيار الشعبة داخل التعديل (مخصص 100%) -->
+        <div class="relative">
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">الشعبة والصف</label>
+          <input type="hidden" id="edit-student-class-id">
+          <button type="button" onclick="toggleDropdown('edit-student-class-dropdown')" class="w-full flex items-center justify-between bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-3 text-sm font-bold text-slate-800 transition active:scale-98">
+            <span id="edit-student-class-label" class="truncate">-- اختر الشُعبة --</span>
+            <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </button>
+          <div id="edit-student-class-dropdown" class="hidden absolute inset-x-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 z-50 max-h-52 overflow-y-auto custom-scroll animate-fade-up">
+            <div id="edit-student-class-options" class="space-y-1"></div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">الرقم الأكاديمي / الباركود</label>
+          <input type="text" id="edit-student-number" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-sm font-semibold outline-none focus:border-brand-600">
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button type="submit" class="flex-1 bg-brand-700 hover:bg-brand-800 text-white font-bold py-3 rounded-2xl text-sm transition active:scale-95">
+            حفظ التعديلات
+          </button>
+          <button type="button" onclick="closeEditStudentModal()" class="px-5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-2xl text-sm transition">
+            إلغاء
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= نافذة تعديل بيانات المعلم (Modal) ================= -->
+  <div id="edit-teacher-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+    <div class="bg-white max-w-md w-full p-6 md:p-8 rounded-3xl border border-slate-200 shadow-2xl space-y-5 animate-fade-up">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg md:text-xl font-extrabold text-slate-900">تعديل بيانات المعلم</h3>
+        <button onclick="closeEditTeacherModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center">✕</button>
+      </div>
+
+      <form onsubmit="handleUpdateTeacher(event)" class="space-y-4">
+        <input type="hidden" id="edit-teacher-id">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">اسم المعلم</label>
+          <input type="text" id="edit-teacher-name" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-sm font-semibold outline-none focus:border-brand-600">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">البريد الإلكتروني (Google)</label>
+          <input type="email" id="edit-teacher-email" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-sm font-semibold outline-none focus:border-brand-600">
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button type="submit" class="flex-1 bg-brand-700 hover:bg-brand-800 text-white font-bold py-3 rounded-2xl text-sm transition active:scale-95">
+            حفظ التعديلات
+          </button>
+          <button type="button" onclick="closeEditTeacherModal()" class="px-5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-2xl text-sm transition">
+            إلغاء
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script>
@@ -535,7 +601,6 @@
       setInterval(updateLiveTimers, 1000);
     });
 
-    // التحكم بقائمة الجوال الجانبية
     function toggleMobileSidebar() {
       const sidebar = document.getElementById("sidebar-menu");
       const overlay = document.getElementById("mobile-overlay");
@@ -550,7 +615,6 @@
       }
     }
 
-    // التنقل بين الأقسام
     function switchTab(tabId) {
       const sidebar = document.getElementById("sidebar-menu");
       const overlay = document.getElementById("mobile-overlay");
@@ -592,7 +656,6 @@
       document.querySelectorAll('[id$="-dropdown"]').forEach(el => el.classList.add('hidden'));
     }
 
-    // إعدادات السعة والمدة
     function saveCapacitySetting(val) {
       maxCapacity = val;
       localStorage.setItem('pass_max_cap', val);
@@ -673,6 +736,41 @@
       }).join('');
     }
 
+    // دوال اختيار الشعبة في القوائم المخصصة
+    function selectClassForNewStudent(id, label) {
+      document.getElementById('new-student-class-id').value = id;
+      document.getElementById('new-student-class-label').innerText = label;
+      document.getElementById('new-student-class-label').classList.remove('text-slate-400');
+      document.getElementById('new-student-class-label').classList.add('text-slate-900');
+      closeAllDropdowns();
+    }
+
+    function selectClassForEditStudent(id, label) {
+      document.getElementById('edit-student-class-id').value = id;
+      document.getElementById('edit-student-class-label').innerText = label;
+      closeAllDropdowns();
+    }
+
+    function renderCustomClassDropdowns() {
+      const newContainer = document.getElementById('new-student-class-options');
+      const editContainer = document.getElementById('edit-student-class-options');
+
+      const optionsHtmlNew = classesList.map(c => `
+        <div onclick="selectClassForNewStudent('${c.id}', '${c.grade || 'ثانوي'} - ${c.name}')" class="px-4 py-2.5 hover:bg-brand-50 hover:text-brand-700 rounded-xl font-bold text-xs md:text-sm cursor-pointer transition">
+          ${c.grade || 'ثانوي'} - ${c.name}
+        </div>
+      `).join('');
+
+      const optionsHtmlEdit = classesList.map(c => `
+        <div onclick="selectClassForEditStudent('${c.id}', '${c.grade || 'ثانوي'} - ${c.name}')" class="px-4 py-2.5 hover:bg-brand-50 hover:text-brand-700 rounded-xl font-bold text-xs md:text-sm cursor-pointer transition">
+          ${c.grade || 'ثانوي'} - ${c.name}
+        </div>
+      `).join('');
+
+      if (newContainer) newContainer.innerHTML = optionsHtmlNew || '<div class="p-2 text-xs text-slate-400">لا توجد شعب مسجلة</div>';
+      if (editContainer) editContainer.innerHTML = optionsHtmlEdit || '<div class="p-2 text-xs text-slate-400">لا توجد شعب مسجلة</div>';
+    }
+
     async function loginWithGoogle() {
       await db.auth.signInWithOAuth({
         provider: "google",
@@ -719,18 +817,15 @@
     }
 
     async function loadData() {
-      // جلب الشُعب
       const { data: classes } = await db.from("classes").select("*").order("name");
       classesList = classes || [];
       renderClassesManager();
-      renderClassesSelectOptions();
+      renderCustomClassDropdowns();
 
-      // جلب الطلاب مع شُعبهم
       const { data: students } = await db.from("students").select("*, classes(name, grade)").order("name");
       studentsList = students || [];
       filterStudentDropdown('');
 
-      // جلب الاستئذانات
       const { data: passes } = await db
         .from("passes")
         .select("*, students(name, classes(name, grade))")
@@ -931,15 +1026,7 @@
       loadData();
     }
 
-    function renderClassesSelectOptions() {
-      const select = document.getElementById("new-student-class");
-      if (!select) return;
-
-      select.innerHTML = '<option value="">-- اختر الشُعبة --</option>' +
-        classesList.map(c => `<option value="${c.id}">${c.grade || 'ثانوي'} - ${c.name}</option>`).join('');
-    }
-
-    // === إدارة الطلاب ===
+    // === إدارة وتعديل الطلاب ===
     function renderStudentsManager() {
       const badge = document.getElementById("students-count-badge");
       if (badge) badge.innerText = studentsList.length;
@@ -950,15 +1037,20 @@
       grid.innerHTML = studentsList.map(s => {
         const classLabel = s.classes ? `${s.classes.grade} - ${s.classes.name}` : 'غير محدد';
         return `
-          <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex items-center justify-between">
+          <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex items-center justify-between gap-2">
             <div>
               <div class="font-extrabold text-slate-900 text-sm md:text-base">${s.name}</div>
               <div class="text-xs text-brand-700 font-bold mt-0.5">${classLabel}</div>
               <div class="text-[11px] text-slate-400 font-mono">${s.student_number || 'بدون رقم'}</div>
             </div>
-            <button onclick="deleteStudent('${s.id}')" class="text-rose-600 hover:text-rose-700 font-bold text-xs md:text-sm p-2 rounded-xl hover:bg-rose-50 transition active:scale-95">
-              حذف
-            </button>
+            <div class="flex items-center gap-1">
+              <button onclick="openEditStudentModal('${s.id}')" class="text-brand-700 hover:text-brand-800 font-bold text-xs md:text-sm px-2.5 py-1.5 rounded-xl hover:bg-brand-50 transition active:scale-95">
+                تعديل
+              </button>
+              <button onclick="deleteStudent('${s.id}')" class="text-rose-600 hover:text-rose-700 font-bold text-xs md:text-sm px-2.5 py-1.5 rounded-xl hover:bg-rose-50 transition active:scale-95">
+                حذف
+              </button>
+            </div>
           </div>
         `;
       }).join('');
@@ -973,16 +1065,56 @@
     async function handleAddStudent(e) {
       e.preventDefault();
       const name = document.getElementById("new-student-name").value.trim();
-      const classId = document.getElementById("new-student-class").value;
+      const classId = document.getElementById("new-student-class-id").value;
       const num = document.getElementById("new-student-number").value.trim();
 
       await db.from("students").insert([{ name: name, class_id: classId || null, student_number: num }]);
       document.getElementById("new-student-name").value = "";
       document.getElementById("new-student-number").value = "";
+      document.getElementById("new-student-class-id").value = "";
+      document.getElementById("new-student-class-label").innerText = "-- اختر الشُعبة --";
+      document.getElementById("new-student-class-label").classList.add("text-slate-400");
       loadData();
     }
 
-    // === إدارة المعلمين ===
+    // دوال نافذة تعديل الطالب
+    function openEditStudentModal(id) {
+      const student = studentsList.find(s => s.id === id);
+      if (!student) return;
+
+      document.getElementById('edit-student-id').value = student.id;
+      document.getElementById('edit-student-name').value = student.name;
+      document.getElementById('edit-student-number').value = student.student_number || '';
+      document.getElementById('edit-student-class-id').value = student.class_id || '';
+      
+      const classLabel = student.classes ? `${student.classes.grade || 'ثانوي'} - ${student.classes.name}` : '-- اختر الشُعبة --';
+      document.getElementById('edit-student-class-label').innerText = classLabel;
+
+      document.getElementById('edit-student-modal').classList.remove('hidden');
+    }
+
+    function closeEditStudentModal() {
+      document.getElementById('edit-student-modal').classList.add('hidden');
+    }
+
+    async function handleUpdateStudent(e) {
+      e.preventDefault();
+      const id = document.getElementById('edit-student-id').value;
+      const name = document.getElementById('edit-student-name').value.trim();
+      const classId = document.getElementById('edit-student-class-id').value;
+      const num = document.getElementById('edit-student-number').value.trim();
+
+      await db.from('students').update({
+        name: name,
+        class_id: classId || null,
+        student_number: num
+      }).eq('id', id);
+
+      closeEditStudentModal();
+      loadData();
+    }
+
+    // === إدارة وتعديل المعلمين ===
     async function loadTeachers() {
       const { data } = await db.from("teachers").select("*").order("created_at", { ascending: false });
       teachersList = data || [];
@@ -1002,9 +1134,14 @@
             <div class="font-extrabold text-slate-900 text-base md:text-lg">${t.name || 'معلم معتمد'}</div>
             <div class="text-xs md:text-sm text-slate-600 font-mono font-medium">${t.email}</div>
           </div>
-          ${t.email !== currentUser.email ? `
-            <button onclick="removeTeacher('${t.id}')" class="text-rose-600 hover:text-rose-700 font-extrabold text-sm md:text-base px-3.5 py-2 rounded-xl hover:bg-rose-50 transition active:scale-95">حذف</button>
-          ` : '<span class="text-brand-700 font-extrabold text-xs md:text-sm px-3.5 py-1.5 bg-brand-100 rounded-xl">حسابك الحالي</span>'}
+          <div class="flex items-center gap-1">
+            <button onclick="openEditTeacherModal('${t.id}')" class="text-brand-700 hover:text-brand-800 font-extrabold text-sm px-3 py-1.5 rounded-xl hover:bg-brand-50 transition active:scale-95">
+              تعديل
+            </button>
+            ${t.email !== currentUser.email ? `
+              <button onclick="removeTeacher('${t.id}')" class="text-rose-600 hover:text-rose-700 font-extrabold text-sm px-3 py-1.5 rounded-xl hover:bg-rose-50 transition active:scale-95">حذف</button>
+            ` : '<span class="text-brand-700 font-extrabold text-xs md:text-sm px-3 py-1 bg-brand-100 rounded-xl">حسابك</span>'}
+          </div>
         </div>
       `).join('');
     }
@@ -1027,6 +1164,37 @@
     async function removeTeacher(id) {
       if (!confirm("هل أنت متأكد من سحب صلاحية هذا المعلم؟")) return;
       await db.from("teachers").delete().eq("id", id);
+      loadTeachers();
+    }
+
+    // دوال نافذة تعديل المعلم
+    function openEditTeacherModal(id) {
+      const teacher = teachersList.find(t => t.id === id);
+      if (!teacher) return;
+
+      document.getElementById('edit-teacher-id').value = teacher.id;
+      document.getElementById('edit-teacher-name').value = teacher.name || '';
+      document.getElementById('edit-teacher-email').value = teacher.email;
+
+      document.getElementById('edit-teacher-modal').classList.remove('hidden');
+    }
+
+    function closeEditTeacherModal() {
+      document.getElementById('edit-teacher-modal').classList.add('hidden');
+    }
+
+    async function handleUpdateTeacher(e) {
+      e.preventDefault();
+      const id = document.getElementById('edit-teacher-id').value;
+      const name = document.getElementById('edit-teacher-name').value.trim();
+      const email = document.getElementById('edit-teacher-email').value.trim().toLowerCase();
+
+      await db.from('teachers').update({
+        name: name,
+        email: email
+      }).eq('id', id);
+
+      closeEditTeacherModal();
       loadTeachers();
     }
 
