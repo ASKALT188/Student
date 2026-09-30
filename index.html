@@ -1,17 +1,353 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>منصة استئذان الطلاب | PassManager</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script src="app.js" defer></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة استئذان الطلاب | PassManager</title>
+  <!-- Tailwind CSS للواجهة والألوان -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- مكتبة Supabase JS الرسمية للواجهات الثابتة -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- خط تجوال العربي -->
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Tajawal', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+  <!-- 1. شاشة تسجيل الدخول -->
+  <div id="login-view" class="flex h-screen items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-100 max-w-md w-full text-center space-y-6">
+      <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">
+        📋
+      </div>
+      <div>
+        <h1 class="text-2xl font-black text-slate-800">منصة استئذان الطلاب</h1>
+        <p class="text-sm text-slate-500 mt-2">سجّل دخولك بحساب المعلم المعتمد لمتابعة الطلاب</p>
+      </div>
+      <button onclick="loginWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition shadow-md">
+        <span>تسجيل الدخول عبر Google</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. تنبيه الحساب غير المصرح له -->
+  <div id="unauthorized-view" class="hidden flex h-screen items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-2xl shadow-lg border border-rose-100 max-w-md w-full text-center space-y-4">
+      <div class="text-4xl">⚠️</div>
+      <h2 class="text-xl font-bold text-slate-800">الحساب غير مصرح له</h2>
+      <p id="unauthorized-email" class="text-sm text-slate-500"></p>
+      <p class="text-xs text-rose-600 font-semibold">يجب أن يكون بريدك مضافاً مسبقاً في جدول teachers بقاعدة البيانات.</p>
+      <button onclick="logout()" class="text-blue-600 font-bold underline text-sm pt-2">تسجيل خروج أو تبديل الحساب</button>
+    </div>
+  </div>
+
+  <!-- 3. لوحة تحكم المعلم الرئيسية -->
+  <div id="app-view" class="hidden max-w-5xl mx-auto p-4 md:p-8 space-y-6">
+    <!-- الشريط العلوي -->
+    <header class="flex flex-wrap items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+      <div>
+        <h1 class="text-xl md:text-2xl font-black text-slate-800">لوحة استئذان الفصل</h1>
+        <p id="teacher-email-display" class="text-xs md:text-sm text-slate-500 mt-1"></p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="exportCSV()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2">
+          📥 تصدير Excel (CSV)
+        </button>
+        <button onclick="logout()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-semibold transition">
+          خروج
+        </button>
+      </div>
+    </header>
+
+    <!-- الطلاب بالخارج حالياً مع العداد -->
+    <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="font-bold text-slate-800 flex items-center gap-2 text-lg">
+          ⏳ الطلاب خارج الفصل حالياً
+        </h2>
+        <span id="active-count-badge" class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-full">0 طالب</span>
+      </div>
+      <div id="active-passes-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- تتولد بطاقات الطلاب بالخارج هنا تلقائياً -->
+      </div>
+    </section>
+
+    <!-- تسجيل استئذان + إضافة طالب جديد -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- نموذج الاستئذان -->
+      <div class="md:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <h3 class="font-bold text-slate-800 mb-4">تسجيل إذن خروج</h3>
+        <form onsubmit="handleGrantPass(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">اختر الطالب</label>
+            <select id="student-select" required class="w-full border border-slate-200 rounded-xl p-3 bg-slate-50 focus:bg-white text-sm outline-none">
+              <option value="">-- اضغط لاختيار الطالب --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">سبب الخروج</label>
+            <select id="reason-select" class="w-full border border-slate-200 rounded-xl p-3 bg-slate-50 focus:bg-white text-sm outline-none">
+              <option value="دورة المياه">دورة المياه</option>
+              <option value="المرشد الطلابي">المرشد الطلابي</option>
+              <option value="الإدارة / المساعد">الإدارة / المساعد</option>
+              <option value="العيادة المدرسية">العيادة المدرسية</option>
+              <option value="شرب ماء">شرب ماء</option>
+              <option value="أخرى">أخرى</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition shadow-sm">
+            تسجيل خروج الآن
+          </button>
+        </form>
+      </div>
+
+      <!-- إضافة طالب للقائمة -->
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <h3 class="font-bold text-slate-800 mb-4">➕ إضافة طالب للفصل</h3>
+        <form onsubmit="handleAddStudent(event)" class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">اسم الطالب</label>
+            <input type="text" id="new-student-name" required placeholder="الاسم الثلاثي" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm bg-slate-50 focus:bg-white outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">الرقم / الباركود</label>
+            <input type="text" id="new-student-number" placeholder="اختياري" class="w-full border border-slate-200 rounded-xl p-2.5 text-sm bg-slate-50 focus:bg-white outline-none">
+          </div>
+          <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 rounded-xl text-sm transition">
+            حفظ الطالب
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- سجل العمليات السابقة -->
+    <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+      <h3 class="font-bold text-slate-800 mb-4">سجل العمليات اليومية</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-right">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-100">
+            <tr>
+              <th class="py-3 px-4">الطالب</th>
+              <th class="py-3 px-4">السبب</th>
+              <th class="py-3 px-4">وقت الخروج</th>
+              <th class="py-3 px-4">المدة المستغرقة</th>
+              <th class="py-3 px-4">الحالة</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body" class="divide-y divide-slate-100">
+            <!-- تتولد السجلات هنا -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // === 1. إعدادات Supabase (ضع بياناتك هنا) ===
+    const SUPABASE_URL = "https://your-project-id.supabase.co";
+    const SUPABASE_ANON_KEY = "your-anon-public-key";
+    
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+    let studentsList = [];
+    let passesList = [];
+
+    // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
+    window.addEventListener("DOMContentLoaded", async () => {
+      const { data: { session } } = await db.auth.getSession();
+      if (session?.user) {
+        currentUser = session.user;
+        verifyTeacherAndLoad();
+      } else {
+        showView("login-view");
+      }
+    });
+
+    // تسجيل الدخول بقوقل
+    async function loginWithGoogle() {
+      await db.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.href.split('#')[0] // يعود لنفس رابط صفحة GitHub
+        }
+      });
+    }
+
+    // تسجيل الخروج
+    async function logout() {
+      await db.auth.signOut();
+      window.location.reload();
+    }
+
+    // التحقق من وجود المعلم في جدول المعتمدين (Whitelist)
+    async function verifyTeacherAndLoad() {
+      const { data: teacher } = await db
+        .from("teachers")
+        .select("id")
+        .eq("email", currentUser.email)
+        .single();
+
+      if (!teacher) {
+        document.getElementById("unauthorized-email").innerText = `حسابك: ${currentUser.email}`;
+        showView("unauthorized-view");
+        return;
+      }
+
+      document.getElementById("teacher-email-display").innerText = `المعلم: ${currentUser.email}`;
+      showView("app-view");
+      loadData();
+
+      // الاستماع للتحديثات الحية (Realtime)
+      db.channel('public:passes')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'passes' }, () => {
+          loadData();
+        })
+        .subscribe();
+    }
+
+    function showView(viewId) {
+      ["login-view", "unauthorized-view", "app-view"].forEach(id => {
+        document.getElementById(id).classList.toggle("hidden", id !== viewId);
+      });
+    }
+
+    async function loadData() {
+      // جلب الطلاب
+      const { data: students } = await db.from("students").select("*").order("name");
+      studentsList = students || [];
+      renderStudentsSelect();
+
+      // جلب الاستئذانات
+      const { data: passes } = await db
+        .from("passes")
+        .select("*, students(name)")
+        .order("time_out", { ascending: false });
+      passesList = passes || [];
+      renderPasses();
+    }
+
+    function renderStudentsSelect() {
+      const select = document.getElementById("student-select");
+      select.innerHTML = '<option value="">-- اضغط لاختيار الطالب --</option>' +
+        studentsList.map(s => `<option value="${s.id}">${s.name} ${s.student_number ? `(${s.student_number})` : ''}</option>`).join('');
+    }
+
+    function renderPasses() {
+      const activeContainer = document.getElementById("active-passes-list");
+      const historyContainer = document.getElementById("history-table-body");
+      const activePasses = passesList.filter(p => p.status === 'active');
+
+      document.getElementById("active-count-badge").innerText = `${activePasses.length} طالب`;
+
+      // الطلاب خارج الفصل
+      if (activePasses.length === 0) {
+        activeContainer.innerHTML = '<div class="col-span-2 text-center py-6 text-slate-400 bg-slate-50 rounded-xl text-sm font-semibold">جميع الطلاب داخل الفصل حالياً ✅</div>';
+      } else {
+        activeContainer.innerHTML = activePasses.map(p => {
+          const diffMinutes = Math.floor((new Date() - new Date(p.time_out)) / 60000);
+          const isLate = diffMinutes >= 6;
+          return `
+            <div class="p-4 rounded-xl border flex items-center justify-between ${isLate ? 'bg-rose-50 border-rose-200' : 'bg-amber-50 border-amber-200'}">
+              <div>
+                <div class="font-bold text-slate-800">${p.students?.name || 'طالب'}</div>
+                <div class="text-xs text-slate-500 mt-0.5">السبب: ${p.reason}</div>
+                <div class="text-xs font-bold mt-2 ${isLate ? 'text-rose-600' : 'text-amber-700'}">
+                  مضى على خروجه: ${diffMinutes} دقيقة ${isLate ? '⚠️ (تأخر)' : ''}
+                </div>
+              </div>
+              <button onclick="returnStudent('${p.id}', '${p.time_out}')" class="bg-white hover:bg-slate-100 text-slate-800 border text-xs font-bold px-3 py-2 rounded-lg shadow-sm transition">
+                تسجيل عودة
+              </button>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // جدول السجلات السابقة
+      historyContainer.innerHTML = passesList.slice(0, 15).map(p => {
+        const timeOutFormatted = new Date(p.time_out).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' });
+        return `
+          <tr class="hover:bg-slate-50">
+            <td class="py-3 px-4 font-bold text-slate-700">${p.students?.name || 'مجهول'}</td>
+            <td class="py-3 px-4 text-slate-600">${p.reason}</td>
+            <td class="py-3 px-4 text-slate-500">${timeOutFormatted}</td>
+            <td class="py-3 px-4 text-slate-600 font-semibold">${p.duration_minutes ? p.duration_minutes + ' دقيقة' : 'خارج الفصل'}</td>
+            <td class="py-3 px-4">
+              ${p.status === 'active' 
+                ? '<span class="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full font-bold">بالخارج</span>' 
+                : '<span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full font-semibold">عاد للفصل</span>'}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // تسجيل إذن جديد
+    async function handleGrantPass(e) {
+      e.preventDefault();
+      const studentId = document.getElementById("student-select").value;
+      const reason = document.getElementById("reason-select").value;
+
+      const activeCount = passesList.filter(p => p.status === 'active').length;
+      if (activeCount >= 1) {
+        if (!confirm("يوجد طالب مستأذن بالخارج حالياً، هل تسمح لطالب آخر؟")) return;
+      }
+
+      await db.from("passes").insert([{
+        student_id: studentId,
+        reason: reason,
+        time_out: new Date().toISOString(),
+        status: "active",
+        created_by: currentUser.id
+      }]);
+
+      document.getElementById("student-select").value = "";
+      loadData();
+    }
+
+    // تسجيل عودة
+    async function returnStudent(passId, timeOut) {
+      const minutes = Math.max(1, Math.round((new Date() - new Date(timeOut)) / 60000));
+      await db.from("passes").update({
+        time_in: new Date().toISOString(),
+        duration_minutes: minutes,
+        status: "returned"
+      }).eq("id", passId);
+
+      loadData();
+    }
+
+    // إضافة طالب
+    async function handleAddStudent(e) {
+      e.preventDefault();
+      const name = document.getElementById("new-student-name").value;
+      const num = document.getElementById("new-student-number").value;
+
+      await db.from("students").insert([{ name: name, student_number: num }]);
+      document.getElementById("new-student-name").value = "";
+      document.getElementById("new-student-number").value = "";
+      loadData();
+    }
+
+    // تصدير CSV
+    function exportCSV() {
+      const headers = ["اسم الطالب", "السبب", "وقت الخروج", "المدة بالدقائق", "الحالة"];
+      const rows = passesList.map(p => [
+        p.students?.name || "",
+        p.reason,
+        new Date(p.time_out).toLocaleString("ar-SA"),
+        p.duration_minutes || "جارٍ",
+        p.status === "active" ? "بالخارج" : "عاد"
+      ]);
+      const csv = "data:text/csv;charset=utf-8,\uFEFF" + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+      const link = document.createElement("a");
+      link.href = encodeURI(csv);
+      link.download = `استئذانات_${new Date().toISOString().slice(0,10)}.csv`;
+      link.click();
+    }
+  </script>
+</body>
 </html>
